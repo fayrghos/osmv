@@ -1,4 +1,4 @@
-module osmv
+module github.com/fayrghos/osmv
 
 go 1.26.4
 

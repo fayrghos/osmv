@@ -1,14 +1,6 @@
 package main
 
-import (
-	"runtime"
-
-	rl "github.com/gen2brain/raylib-go/raylib"
-)
-
-func init() {
-	runtime.LockOSThread()
-}
+import rl "github.com/gen2brain/raylib-go/raylib"
 
 func main() {
 	rl.InitWindow(1366, 768, "OSMV")
