@@ -6,31 +6,23 @@ import (
 )
 
 func main() {
+	rl.SetConfigFlags(rl.FlagMsaa4xHint)
 	rl.InitWindow(1366, 768, "OSMV")
 	rl.SetTargetFPS(60)
 	defer rl.CloseWindow()
 
-	fonteSans := rl.LoadFont("./assets/fonts/LiberationSans.ttf")
+	fonteSans := rl.LoadFontEx("./assets/fonts/LiberationSans.ttf", 40, nil)
 
 	box1 := ui.Digibox{
 		Pos:      rl.Vector2{X: 200, Y: 200},
 		Tam:      rl.Vector2{X: 300, Y: 50},
-		Texto:    "ABC",
+		Texto:    "1359",
 		Fonte:    &fonteSans,
-		FonteTam: 32,
-	}
-
-	box2 := ui.Digibox{
-		Pos:      rl.Vector2{X: 200, Y: 400},
-		Tam:      rl.Vector2{X: 300, Y: 50},
-		Texto:    "ABC",
-		Fonte:    &fonteSans,
-		FonteTam: 32,
+		FonteTam: 40,
 	}
 
 	for !rl.WindowShouldClose() {
 		box1.Atualizar()
-		box2.Atualizar()
 
 		rl.BeginDrawing()
 
@@ -38,7 +30,6 @@ func main() {
 		rl.DrawText("Projetistas Software 3000", 800, 600, 30, rl.White)
 
 		box1.Desenhar()
-		box2.Desenhar()
 
 		rl.EndDrawing()
 	}

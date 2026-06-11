@@ -16,17 +16,31 @@ type Digibox struct {
 }
 
 func (box Digibox) Desenhar() {
-	if box.Selecionada {
-		rl.DrawRectangleV(box.Pos.AddValue(-3), box.Tam.AddValue(6), CorSelecao)
-	} else if box.Destacada {
-		rl.DrawRectangleV(box.Pos.AddValue(-3), box.Tam.AddValue(6), CorDestaque)
+	recBox := rl.Rectangle{
+		X:      box.Pos.X,
+		Y:      box.Pos.Y,
+		Width:  box.Tam.X,
+		Height: box.Tam.Y,
 	}
-	rl.DrawRectangleV(box.Pos, box.Tam, CorPrincipal)
 
-	medida := rl.MeasureTextEx(*box.Fonte, box.Texto, box.FonteTam, 1)
+	if box.Selecionada {
+		rl.DrawRectangleRoundedLinesEx(recBox, 0.5, 1, 3, CorSelecao)
+	} else if box.Destacada {
+		rl.DrawRectangleRoundedLinesEx(recBox, 0.5, 1, 2, CorDestaque)
+	}
+	rl.DrawRectangleRounded(recBox, 0.5, 1, CorPrincipal)
+
+	textoDesenhar := ""
+	if len(box.Texto) > 0 {
+		textoDesenhar = box.Texto
+	} else if box.Selecionada && int(rl.GetTime()*4)%2 == 0 {
+		textoDesenhar = "_"
+	}
+
+	medida := rl.MeasureTextEx(*box.Fonte, textoDesenhar, box.FonteTam, 1)
 	rl.DrawTextEx(
 		*box.Fonte,
-		box.Texto,
+		textoDesenhar,
 		box.Pos.Add(box.Tam.Subtract(medida).Divide(rl.Vector2{X: 2, Y: 2})),
 		box.FonteTam,
 		1,
