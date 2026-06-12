@@ -6,13 +6,12 @@ import (
 )
 
 type Digibox struct {
-	Pos         rl.Vector2
-	Tam         rl.Vector2
-	Texto       string
-	Selecionada bool
-	Destacada   bool
-	Fonte       *rl.Font
-	FonteTam    float32
+	Pos   rl.Vector2
+	Tam   rl.Vector2
+	Campo utils.Texto
+
+	selecionada bool
+	destacada   bool
 }
 
 func (box Digibox) Desenhar() {
@@ -23,26 +22,26 @@ func (box Digibox) Desenhar() {
 		Height: box.Tam.Y,
 	}
 
-	if box.Selecionada {
-		rl.DrawRectangleRoundedLinesEx(recBox, 0.5, 1, 3, CorSelecao)
-	} else if box.Destacada {
-		rl.DrawRectangleRoundedLinesEx(recBox, 0.5, 1, 2, CorDestaque)
+	if box.selecionada {
+		rl.DrawRectangleRoundedLinesEx(recBox, 0.5, 1, 4, CorSelecao)
+	} else if box.destacada {
+		rl.DrawRectangleRoundedLinesEx(recBox, 0.5, 1, 3, CorDestaque)
 	}
 	rl.DrawRectangleRounded(recBox, 0.5, 1, CorPrincipal)
 
 	textoDesenhar := ""
-	if len(box.Texto) > 0 {
-		textoDesenhar = box.Texto
-	} else if box.Selecionada && int(rl.GetTime()*4)%2 == 0 {
+	if len(box.Campo.Conteudo) > 0 {
+		textoDesenhar = box.Campo.Conteudo
+	} else if box.selecionada && int(rl.GetTime()*4)%2 == 0 {
 		textoDesenhar = "_"
 	}
 
-	medida := rl.MeasureTextEx(*box.Fonte, textoDesenhar, box.FonteTam, 1)
+	medidaCampo := rl.MeasureTextEx(*box.Campo.Fonte, textoDesenhar, box.Campo.Tam, 1)
 	rl.DrawTextEx(
-		*box.Fonte,
+		*box.Campo.Fonte,
 		textoDesenhar,
-		box.Pos.Add(box.Tam.Subtract(medida).Divide(rl.Vector2{X: 2, Y: 2})),
-		box.FonteTam,
+		box.Pos.Add(box.Tam.Subtract(medidaCampo).Divide(rl.Vector2{X: 2, Y: 2})),
+		box.Campo.Tam,
 		1,
 		rl.White,
 	)
@@ -51,10 +50,10 @@ func (box Digibox) Desenhar() {
 func (box *Digibox) ReceberNums() {
 	digitado := rl.GetCharPressed()
 
-	if digitado >= '\u0030' && digitado <= '\u0039' && len(box.Texto) < 5 {
-		box.Texto += string(digitado)
-	} else if utils.IsKeyPressedDouble(rl.KeyBackspace) && len(box.Texto) > 0 {
-		box.Texto = box.Texto[:len(box.Texto)-1]
+	if digitado >= '\u0030' && digitado <= '\u0039' && len(box.Campo.Conteudo) < 5 {
+		box.Campo.Conteudo += string(digitado)
+	} else if utils.IsKeyPressedDouble(rl.KeyBackspace) && len(box.Campo.Conteudo) > 0 {
+		box.Campo.Conteudo = box.Campo.Conteudo[:len(box.Campo.Conteudo)-1]
 	}
 }
 
@@ -68,17 +67,17 @@ func (box *Digibox) Atualizar() {
 
 	if rl.CheckCollisionPointRec(rl.GetMousePosition(), retanColisao) {
 		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-			box.Selecionada = true
+			box.selecionada = true
 		}
-		box.Destacada = true
+		box.destacada = true
 	} else {
 		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
-			box.Selecionada = false
+			box.selecionada = false
 		}
-		box.Destacada = false
+		box.destacada = false
 	}
 
-	if box.Selecionada {
+	if box.selecionada {
 		box.ReceberNums()
 	}
 }

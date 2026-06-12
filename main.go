@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/fayrghos/osmv/internal/ui"
+	"github.com/fayrghos/osmv/internal/utils"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -11,14 +12,16 @@ func main() {
 	rl.SetTargetFPS(60)
 	defer rl.CloseWindow()
 
-	fonteSans := rl.LoadFontEx("./assets/fonts/LiberationSans.ttf", 40, nil)
+	fonteDados := utils.CarregarFonte("./assets/fonts/LiberationSans.ttf", 48)
 
 	box1 := ui.Digibox{
-		Pos:      rl.Vector2{X: 200, Y: 200},
-		Tam:      rl.Vector2{X: 300, Y: 50},
-		Texto:    "1359",
-		Fonte:    &fonteSans,
-		FonteTam: 40,
+		Pos: rl.Vector2{X: 200, Y: 200},
+		Tam: rl.Vector2{X: 400, Y: 75},
+		Campo: utils.Texto{
+			Conteudo: "13967",
+			Tam:      48,
+			Fonte:    &fonteDados,
+		},
 	}
 
 	for !rl.WindowShouldClose() {
