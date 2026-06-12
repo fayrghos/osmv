@@ -9,9 +9,15 @@ type Texto struct {
 	Fonte    *rl.Font
 }
 
-// Carrega a fonte e melhora a resolução dela
+// Carrega a fonte corretamente e melhora a resolução dela
 func CarregarFonte(caminho string, tam int32) rl.Font {
-	saida := rl.LoadFontEx(caminho, tam*3, nil)
+	alfas := " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	acentos := "áéíóúâêîôûãõÁÉÍÓÚÂÊÎÔÛÃÕçÇ"
+	pontuacao := ",.:?!_"
+
+	caracteres := []rune(alfas + acentos + pontuacao)
+	saida := rl.LoadFontEx(caminho, tam*3, caracteres, int32(len(caracteres)))
+
 	rl.SetTextureFilter(saida.Texture, rl.FilterBilinear)
 	return saida
 }

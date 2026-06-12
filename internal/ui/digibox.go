@@ -53,7 +53,7 @@ func (box Digibox) Desenhar() {
 	rl.DrawTextEx(
 		*box.Titulo.Fonte,
 		box.Titulo.Conteudo,
-		box.Pos.Add(rl.Vector2{X: 3, Y: -medidaTitulo.Y - 5}),
+		box.Pos.Add(rl.Vector2{X: 3, Y: -medidaTitulo.Y - 10}),
 		box.Titulo.Tam,
 		1,
 		rl.White,
@@ -64,7 +64,7 @@ func (box Digibox) Desenhar() {
 func (box *Digibox) ReceberNums() {
 	digitado := rl.GetCharPressed()
 
-	if digitado >= '\u0030' && digitado <= '\u0039' && len(box.Campo.Conteudo) < 5 {
+	if digitado >= '0' && digitado <= '9' && len(box.Campo.Conteudo) < 5 {
 		box.Campo.Conteudo += string(digitado)
 	} else if utils.IsKeyPressedDouble(rl.KeyBackspace) && len(box.Campo.Conteudo) > 0 {
 		box.Campo.Conteudo = box.Campo.Conteudo[:len(box.Campo.Conteudo)-1]
