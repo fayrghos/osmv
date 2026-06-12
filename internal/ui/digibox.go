@@ -5,6 +5,7 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+// Caixas de digitação
 type Digibox struct {
 	Pos   rl.Vector2
 	Tam   rl.Vector2
@@ -14,6 +15,7 @@ type Digibox struct {
 	destacada   bool
 }
 
+// Redesenha a caixa
 func (box Digibox) Desenhar() {
 	recBox := rl.Rectangle{
 		X:      box.Pos.X,
@@ -47,6 +49,7 @@ func (box Digibox) Desenhar() {
 	)
 }
 
+// Permite que o usuário insira números na caixa
 func (box *Digibox) ReceberNums() {
 	digitado := rl.GetCharPressed()
 
@@ -57,6 +60,7 @@ func (box *Digibox) ReceberNums() {
 	}
 }
 
+// Atualiza a lógica da caixa
 func (box *Digibox) Atualizar() {
 	retanColisao := rl.Rectangle{
 		X:      box.Pos.X,

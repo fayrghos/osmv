@@ -2,6 +2,7 @@ package utils
 
 import rl "github.com/gen2brain/raylib-go/raylib"
 
+// Armazena facilmente objetos comuns de texto
 type Texto struct {
 	Conteudo string
 	Tam      float32
@@ -15,6 +16,7 @@ func CarregarFonte(caminho string, tam int32) rl.Font {
 	return saida
 }
 
+// É tipo o IsKeyDown(), mas apropriado pra digitação
 func IsKeyPressedDouble(key int32) bool {
 	return rl.IsKeyPressed(key) || rl.IsKeyPressedRepeat(key)
 }
