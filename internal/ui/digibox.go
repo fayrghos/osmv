@@ -7,9 +7,10 @@ import (
 
 // Caixas de digitação
 type Digibox struct {
-	Pos   rl.Vector2
-	Tam   rl.Vector2
-	Campo utils.Texto
+	Pos    rl.Vector2
+	Tam    rl.Vector2
+	Campo  utils.Texto
+	Titulo utils.Texto
 
 	selecionada bool
 	destacada   bool
@@ -44,6 +45,16 @@ func (box Digibox) Desenhar() {
 		textoDesenhar,
 		box.Pos.Add(box.Tam.Subtract(medidaCampo).Divide(rl.Vector2{X: 2, Y: 2})),
 		box.Campo.Tam,
+		1,
+		rl.White,
+	)
+
+	medidaTitulo := rl.MeasureTextEx(*box.Titulo.Fonte, box.Titulo.Conteudo, box.Titulo.Tam, 1)
+	rl.DrawTextEx(
+		*box.Titulo.Fonte,
+		box.Titulo.Conteudo,
+		box.Pos.Add(rl.Vector2{X: 3, Y: -medidaTitulo.Y - 5}),
+		box.Titulo.Tam,
 		1,
 		rl.White,
 	)

@@ -12,7 +12,7 @@ func main() {
 	rl.SetTargetFPS(60)
 	defer rl.CloseWindow()
 
-	fonteDados := utils.CarregarFonte("./assets/fonts/LiberationSans.ttf", 48)
+	fonteSans := utils.CarregarFonte("./assets/fonts/LiberationSans.ttf", 28)
 
 	box1 := ui.Digibox{
 		Pos: rl.Vector2{X: 200, Y: 200},
@@ -20,7 +20,12 @@ func main() {
 		Campo: utils.Texto{
 			Conteudo: "13967",
 			Tam:      48,
-			Fonte:    &fonteDados,
+			Fonte:    &fonteSans,
+		},
+		Titulo: utils.Texto{
+			Conteudo: "Teste",
+			Tam:      36,
+			Fonte:    &fonteSans,
 		},
 	}
 
