@@ -12,6 +12,7 @@ type Errobox struct {
 	Campo utils.Texto
 }
 
+// Redesenha a caixa
 func (box Errobox) Desenhar() {
 	if box.Campo.Conteudo == "" {
 		return
@@ -36,4 +37,9 @@ func (box Errobox) Desenhar() {
 		1,
 		CorErro,
 	)
+}
+
+// Setter pra cadastrar um erro
+func (box *Errobox) Definir(erro string) {
+	box.Campo.Conteudo = erro
 }

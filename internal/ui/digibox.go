@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"strconv"
+
 	"github.com/fayrghos/osmv/internal/utils"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -69,6 +71,15 @@ func (box *Digibox) ReceberNums() {
 	} else if utils.IsKeyPressedDouble(rl.KeyBackspace) && len(box.Campo.Conteudo) > 0 {
 		box.Campo.Conteudo = box.Campo.Conteudo[:len(box.Campo.Conteudo)-1]
 	}
+}
+
+// Retorna o número contido no campo, ou 0 se der algum erro
+func (box Digibox) Exportar() int {
+	val, err := strconv.Atoi(box.Campo.Conteudo)
+	if err != nil {
+		return 0
+	}
+	return val
 }
 
 // Atualiza a lógica da caixa

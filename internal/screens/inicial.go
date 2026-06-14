@@ -1,8 +1,6 @@
 package screens
 
 import (
-	"strconv"
-
 	"github.com/fayrghos/osmv/internal/state"
 	"github.com/fayrghos/osmv/internal/ui"
 	"github.com/fayrghos/osmv/internal/utils"
@@ -65,23 +63,15 @@ func AtualizarInicial(globais *state.Globais) {
 	globais.BoxTamLogica.Atualizar()
 
 	if rl.IsKeyPressed(rl.KeyEnter) {
-		var err error
+		globais.TamPaginas = globais.BoxTamPaginas.Exportar()
+		globais.TamFisica = globais.BoxTamFisica.Exportar()
+		globais.TamLogica = globais.BoxTamLogica.Exportar()
 
-		globais.TamPaginas, err = strconv.Atoi(globais.BoxTamPaginas.Campo.Conteudo)
-		if err != nil {
-			panic("O conteúdo do campo de páginas não pôde ser convertido")
+		if globais.TamPaginas == 0 || globais.TamFisica == 0 || globais.TamLogica == 0 {
+			globais.BoxErro.Definir("Todos os campos devem ser maiores que 0.")
+		} else {
+			globais.BoxErro.Definir("")
+			globais.TelaAtual = state.TelaPrincipal
 		}
-
-		globais.TamFisica, err = strconv.Atoi(globais.BoxTamFisica.Campo.Conteudo)
-		if err != nil {
-			panic("O conteúdo do campo da memória física não pôde ser convertido")
-		}
-
-		globais.TamLogica, err = strconv.Atoi(globais.BoxTamLogica.Campo.Conteudo)
-		if err != nil {
-			panic("O conteúdo do campo da memória lógica não pôde ser convertido")
-		}
-
-		globais.TelaAtual = state.TelaPrincipal
 	}
 }
