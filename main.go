@@ -19,6 +19,14 @@ func main() {
 
 	globais := state.Globais{
 		FonteSans: &fonteSans,
+		BoxErro: ui.Errobox{
+			Pos: rl.Vector2{X: state.Larg/2 - 400, Y: state.Altu - 70},
+			Tam: rl.Vector2{X: 800, Y: 60},
+			Campo: utils.Texto{
+				Tam:   42,
+				Fonte: &fonteSans,
+			},
+		},
 	}
 
 	for !rl.WindowShouldClose() {
@@ -31,6 +39,7 @@ func main() {
 			screens.DesenharInicial(&globais)
 		}
 
+		globais.BoxErro.Desenhar()
 		rl.EndDrawing()
 	}
 }
