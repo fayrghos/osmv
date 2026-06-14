@@ -1,0 +1,136 @@
+package screens
+
+import (
+	"github.com/fayrghos/osmv/internal/state"
+	"github.com/fayrghos/osmv/internal/ui"
+	"github.com/fayrghos/osmv/internal/utils"
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
+
+func AtualizarPrincipal(globais *state.Globais) {}
+
+func DesenharPrincipal(globais *state.Globais) {
+	// ------------------------------
+	// Páginas
+	// ------------------------------
+	recPaginas := rl.Rectangle{
+		X:      77,
+		Y:      77,
+		Width:  230,
+		Height: 614,
+	}
+	rl.DrawRectangleRounded(recPaginas, 0.1, 4, ui.CorPrincipal)
+
+	recPaginasIn := rl.Rectangle{
+		X:      88,
+		Y:      146,
+		Width:  208,
+		Height: 533,
+	}
+	rl.DrawRectangleRec(recPaginasIn, ui.CorSecundaria)
+
+	// ------------------------------
+	// Quadros
+	// ------------------------------
+	recQuadros := rl.Rectangle{
+		X:      338,
+		Y:      77,
+		Width:  230,
+		Height: 614,
+	}
+	rl.DrawRectangleRounded(recQuadros, 0.1, 4, ui.CorPrincipal)
+
+	recrecQuadrosIn := rl.Rectangle{
+		X:      348,
+		Y:      146,
+		Width:  208,
+		Height: 533,
+	}
+	rl.DrawRectangleRec(recrecQuadrosIn, ui.CorSecundaria)
+
+	// ------------------------------
+	// Tabela
+	// ------------------------------
+	recTabela := rl.Rectangle{
+		X:      598,
+		Y:      77,
+		Width:  268,
+		Height: 352,
+	}
+	rl.DrawRectangleRounded(recTabela, 0.08, 4, ui.CorPrincipal)
+
+	recrecTabelaIn := rl.Rectangle{
+		X:      609,
+		Y:      146,
+		Width:  245,
+		Height: 271,
+	}
+	rl.DrawRectangleRec(recrecTabelaIn, ui.CorSecundaria)
+
+	// ------------------------------
+	// Memória
+	// ------------------------------
+	recMemoria := rl.Rectangle{
+		X:      896,
+		Y:      77,
+		Width:  393,
+		Height: 614,
+	}
+	rl.DrawRectangleRounded(recMemoria, 0.05, 4, ui.CorPrincipal)
+
+	recrecMemoriaIn := rl.Rectangle{
+		X:      907,
+		Y:      146,
+		Width:  371,
+		Height: 533,
+	}
+	rl.DrawRectangleRec(recrecMemoriaIn, ui.CorSecundaria)
+
+	// ------------------------------
+	// Botões
+	// ------------------------------
+	ui.Digibox{ // Placeholder
+		Pos: rl.Vector2{X: 598, Y: 441},
+		Tam: rl.Vector2{X: 268, Y: 75},
+		Campo: utils.Texto{
+			Conteudo: "Continuar",
+			Tam:      32,
+			Fonte:    globais.FonteSans,
+		},
+		Titulo: utils.Texto{
+			Conteudo: "",
+			Tam:      0,
+			Fonte:    globais.FonteSans,
+		},
+	}.Desenhar()
+
+	ui.Digibox{ // Placeholder
+		Pos: rl.Vector2{X: 598, Y: 528},
+		Tam: rl.Vector2{X: 268, Y: 75},
+		Campo: utils.Texto{
+			Conteudo: "Passo",
+			Tam:      32,
+			Fonte:    globais.FonteSans,
+		},
+		Titulo: utils.Texto{
+			Conteudo: "",
+			Tam:      0,
+			Fonte:    globais.FonteSans,
+		},
+	}.Desenhar()
+
+	ui.Digibox{ // Placeholder
+		Pos: rl.Vector2{X: 598, Y: 616},
+		Tam: rl.Vector2{X: 268, Y: 75},
+		Campo: utils.Texto{
+			Conteudo: "Voltar",
+			Tam:      32,
+			Fonte:    globais.FonteSans,
+		},
+		Titulo: utils.Texto{
+			Conteudo: "",
+			Tam:      0,
+			Fonte:    globais.FonteSans,
+		},
+	}.Desenhar()
+}

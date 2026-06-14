@@ -11,8 +11,10 @@ import (
 func main() {
 	rl.SetConfigFlags(rl.FlagMsaa4xHint)
 	rl.InitWindow(1366, 768, "OSMV")
-	rl.SetTargetFPS(60)
 	defer rl.CloseWindow()
+
+	rl.SetTargetFPS(60)
+	rl.SetExitKey(rl.KeyNull)
 
 	fonteSans := utils.CarregarFonte("./assets/fonts/LiberationSans.ttf", 28)
 	defer rl.UnloadFont(fonteSans)
@@ -29,6 +31,9 @@ func main() {
 		},
 	}
 
+	//Debug
+	globais.TelaAtual = state.TelaPrincipal
+
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(ui.CorFundo)
@@ -37,6 +42,9 @@ func main() {
 		case state.TelaInicial:
 			screens.AtualizarInicial(&globais)
 			screens.DesenharInicial(&globais)
+		case state.TelaPrincipal:
+			screens.AtualizarPrincipal(&globais)
+			screens.DesenharPrincipal(&globais)
 		}
 
 		globais.BoxErro.Desenhar()
