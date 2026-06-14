@@ -1,13 +1,63 @@
 package screens
 
 import (
+	"fmt"
+
 	"github.com/fayrghos/osmv/internal/state"
 	"github.com/fayrghos/osmv/internal/ui"
 	"github.com/fayrghos/osmv/internal/utils"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func AtualizarPrincipal(globais *state.Globais) {}
+func AtualizarPrincipal(globais *state.Globais) {
+	globais.InicializarTela(state.TelaPrincipal, func() {
+		globais.BotaoContinuar = ui.Botao{
+			Pos: rl.Vector2{X: 598, Y: 441},
+			Tam: rl.Vector2{X: 268, Y: 75},
+			Rotulo: utils.Texto{
+				Conteudo: "Continuar",
+				Tam:      32,
+				Fonte:    globais.FonteSans,
+			},
+			Travado: false,
+			Clique: func() {
+				fmt.Println("Clicaram em continuar!!")
+			},
+		}
+
+		globais.BotaoPasso = ui.Botao{
+			Pos: rl.Vector2{X: 598, Y: 528},
+			Tam: rl.Vector2{X: 268, Y: 75},
+			Rotulo: utils.Texto{
+				Conteudo: "Passo",
+				Tam:      32,
+				Fonte:    globais.FonteSans,
+			},
+			Travado: false,
+			Clique: func() {
+				fmt.Println("Clicaram em passo!!")
+			},
+		}
+
+		globais.BotaoVoltar = ui.Botao{
+			Pos: rl.Vector2{X: 598, Y: 616},
+			Tam: rl.Vector2{X: 268, Y: 75},
+			Rotulo: utils.Texto{
+				Conteudo: "Voltar",
+				Tam:      32,
+				Fonte:    globais.FonteSans,
+			},
+			Travado: true,
+			Clique: func() {
+				fmt.Println("Clicaram em voltar!!")
+			},
+		}
+	})
+
+	globais.BotaoContinuar.Atualizar()
+	globais.BotaoPasso.Atualizar()
+	globais.BotaoVoltar.Atualizar()
+}
 
 func DesenharPrincipal(globais *state.Globais) {
 	// ------------------------------
@@ -89,48 +139,7 @@ func DesenharPrincipal(globais *state.Globais) {
 	// ------------------------------
 	// Botões
 	// ------------------------------
-	ui.Digibox{ // Placeholder
-		Pos: rl.Vector2{X: 598, Y: 441},
-		Tam: rl.Vector2{X: 268, Y: 75},
-		Campo: utils.Texto{
-			Conteudo: "Continuar",
-			Tam:      32,
-			Fonte:    globais.FonteSans,
-		},
-		Titulo: utils.Texto{
-			Conteudo: "",
-			Tam:      0,
-			Fonte:    globais.FonteSans,
-		},
-	}.Desenhar()
-
-	ui.Digibox{ // Placeholder
-		Pos: rl.Vector2{X: 598, Y: 528},
-		Tam: rl.Vector2{X: 268, Y: 75},
-		Campo: utils.Texto{
-			Conteudo: "Passo",
-			Tam:      32,
-			Fonte:    globais.FonteSans,
-		},
-		Titulo: utils.Texto{
-			Conteudo: "",
-			Tam:      0,
-			Fonte:    globais.FonteSans,
-		},
-	}.Desenhar()
-
-	ui.Digibox{ // Placeholder
-		Pos: rl.Vector2{X: 598, Y: 616},
-		Tam: rl.Vector2{X: 268, Y: 75},
-		Campo: utils.Texto{
-			Conteudo: "Voltar",
-			Tam:      32,
-			Fonte:    globais.FonteSans,
-		},
-		Titulo: utils.Texto{
-			Conteudo: "",
-			Tam:      0,
-			Fonte:    globais.FonteSans,
-		},
-	}.Desenhar()
+	globais.BotaoContinuar.Desenhar()
+	globais.BotaoPasso.Desenhar()
+	globais.BotaoVoltar.Desenhar()
 }

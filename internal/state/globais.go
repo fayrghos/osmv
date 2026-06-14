@@ -33,6 +33,10 @@ type Globais struct {
 	BoxTamFisica  ui.Digibox
 	TamLogica     int
 	BoxTamLogica  ui.Digibox
+
+	BotaoContinuar ui.Botao
+	BotaoPasso     ui.Botao
+	BotaoVoltar    ui.Botao
 }
 
 // Essa função roda algo exatamente uma vez quando uma tela inicia
