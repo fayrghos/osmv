@@ -142,4 +142,34 @@ func DesenharPrincipal(globais *state.Globais) {
 	globais.BotaoContinuar.Desenhar()
 	globais.BotaoPasso.Desenhar()
 	globais.BotaoVoltar.Desenhar()
+
+	type Tabela struct {
+	PosPaginas rl.Vector2
+	DimPaginas rl.Vector2
+	PosQuadros rl.Vector2
+	DimQuadros rl.Vector2
+	Cor rl.Color
+	CorBorda rl.Color
 }
+
+	alturaFixa := recPaginasIn.Height;
+	larguraFixa := recPaginasIn.Width;
+	
+	slotPaginas := alturaFixa/float32(globais.TamPaginas)
+
+	for i := 1; i < globais.TamPaginas; i++ {
+		posY := recPaginasIn.Y + float32(i)*slotPaginas
+		posIni := rl.Vector2{X: recPaginasIn.X, Y: posY}
+		posEnd := rl.Vector2{X: recPaginasIn.X+larguraFixa, Y: posY}
+		rl.DrawLineEx(posIni, posEnd, 3 , rl.White)
+	}
+
+	for i := 1; i < globais.TamPaginas; i++ {
+		posY := recrecQuadrosIn.Y + float32(i)*slotPaginas
+		posIni := rl.Vector2{X: recrecQuadrosIn.X, Y: posY}
+		posEnd := rl.Vector2{X: recrecQuadrosIn.X+larguraFixa, Y: posY}
+		rl.DrawLineEx(posIni, posEnd, 3 ,rl.White)
+	}
+	
+}
+
