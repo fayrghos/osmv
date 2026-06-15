@@ -25,7 +25,7 @@ func (box Errobox) Desenhar() {
 		Height: box.Tam.Y,
 	}
 
-	rl.DrawRectangleRoundedLinesEx(recBox, 0.5, 1, 4, CorErro)
+	rl.DrawRectangleRoundedLinesEx(recBox, 0.5, 1, 3, CorErro)
 	rl.DrawRectangleRounded(recBox, 0.5, 1, CorPrincipal)
 
 	medidaCampo := rl.MeasureTextEx(*box.Campo.Fonte, box.Campo.Conteudo, box.Campo.Tam, 1)

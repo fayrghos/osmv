@@ -12,6 +12,7 @@ func DesenharInicial(globais *state.Globais) {
 	globais.BoxTamPaginas.Desenhar()
 	globais.BoxTamFisica.Desenhar()
 	globais.BoxTamLogica.Desenhar()
+	globais.BotaoContinuar.Desenhar()
 }
 
 // Redesenho da tela inicial
@@ -56,22 +57,32 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte:    globais.FonteSans,
 			},
 		}
+		globais.BotaoContinuar = ui.Botao{
+			Pos: rl.Vector2{X: state.Larg/2 - 100, Y: state.Altu - 150},
+			Tam: rl.Vector2{X: 200, Y: 80},
+			Rotulo: utils.Texto{
+				Conteudo: "Avançar",
+				Tam:      32,
+				Fonte:    globais.FonteSans,
+			},
+			Travado: false,
+			Clique: func() {
+				globais.TamPaginas = globais.BoxTamPaginas.Exportar()
+				globais.TamFisica = globais.BoxTamFisica.Exportar()
+				globais.TamLogica = globais.BoxTamLogica.Exportar()
+
+				if globais.TamPaginas == 0 || globais.TamFisica == 0 || globais.TamLogica == 0 {
+					globais.BoxErro.Definir("Todos os campos devem ser maiores que 0.")
+				} else {
+					globais.BoxErro.Definir("")
+					globais.TelaAtual = state.TelaPrincipal
+				}
+			},
+		}
 	})
 
 	globais.BoxTamPaginas.Atualizar()
 	globais.BoxTamFisica.Atualizar()
 	globais.BoxTamLogica.Atualizar()
-
-	if rl.IsKeyPressed(rl.KeyEnter) {
-		globais.TamPaginas = globais.BoxTamPaginas.Exportar()
-		globais.TamFisica = globais.BoxTamFisica.Exportar()
-		globais.TamLogica = globais.BoxTamLogica.Exportar()
-
-		if globais.TamPaginas == 0 || globais.TamFisica == 0 || globais.TamLogica == 0 {
-			globais.BoxErro.Definir("Todos os campos devem ser maiores que 0.")
-		} else {
-			globais.BoxErro.Definir("")
-			globais.TelaAtual = state.TelaPrincipal
-		}
-	}
+	globais.BotaoContinuar.Atualizar()
 }

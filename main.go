@@ -22,17 +22,14 @@ func main() {
 	globais := state.Globais{
 		FonteSans: &fonteSans,
 		BoxErro: ui.Errobox{
-			Pos: rl.Vector2{X: state.Larg/2 - 400, Y: state.Altu - 70},
+			Pos: rl.Vector2{X: state.Larg/2 - 400, Y: 35},
 			Tam: rl.Vector2{X: 800, Y: 60},
 			Campo: utils.Texto{
-				Tam:   42,
+				Tam:   32,
 				Fonte: &fonteSans,
 			},
 		},
 	}
-
-	//Debug
-	globais.TelaAtual = state.TelaPrincipal
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
