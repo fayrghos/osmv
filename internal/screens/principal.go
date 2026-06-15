@@ -143,16 +143,12 @@ func DesenharPrincipal(globais *state.Globais) {
 	globais.BotaoPasso.Desenhar()
 	globais.BotaoVoltar.Desenhar()
 
-	type Tabela struct {
-		PosPaginas rl.Vector2
-		DimPaginas rl.Vector2
-		PosQuadros rl.Vector2
-		DimQuadros rl.Vector2
-		Cor        rl.Color
-		CorBorda   rl.Color
-	}
-
+	alturaFixa := recPaginasIn.Height
+	larguraFixa := recPaginasIn.Width
+	alturaFixaMemo := recrecMemoriaIn.Height
+	larguraFixaMemo := recrecMemoriaIn.Width
 	slotPaginas := alturaFixa / float32(globais.TamPaginas)
+	slotPaginasMemo := alturaFixaMemo / float32(globais.TamFisica)
 
 	for i := 1; i < globais.TamPaginas; i++ {
 		posY := recPaginasIn.Y + float32(i)*slotPaginas
@@ -169,9 +165,9 @@ func DesenharPrincipal(globais *state.Globais) {
 	}
 
 	for i := 1; i < globais.TamFisica; i++ {
-		posY := recrecMemoriaIn.Y + float32(i)*slotPaginas
+		posY := recrecMemoriaIn.Y + float32(i)*slotPaginasMemo
 		posIni := rl.Vector2{X: recrecMemoriaIn.X, Y: posY}
-		posEnd := rl.Vector2{X: recrecMemoriaIn.X + larguraFixa, Y: posY}
+		posEnd := rl.Vector2{X: recrecMemoriaIn.X + larguraFixaMemo, Y: posY}
 		rl.DrawLineEx(posIni, posEnd, 3, ui.CorPrincipal)
 	}
 }
