@@ -79,6 +79,16 @@ func DesenharPrincipal(globais *state.Globais) {
 	}
 	rl.DrawRectangleRec(recPaginasIn, ui.CorSecundaria)
 
+	rl.DrawRectangleRec(
+		rl.Rectangle{
+			X:      121,
+			Y:      146,
+			Width:  3,
+			Height: 533,
+		},
+		ui.CorPrincipal,
+	)
+
 	// ------------------------------
 	// Quadros
 	// ------------------------------
@@ -135,6 +145,16 @@ func DesenharPrincipal(globais *state.Globais) {
 		Height: 533,
 	}
 	rl.DrawRectangleRec(recrecMemoriaIn, ui.CorSecundaria)
+
+	rl.DrawRectangleRec(
+		rl.Rectangle{
+			X:      940,
+			Y:      146,
+			Width:  3,
+			Height: 533,
+		},
+		ui.CorPrincipal,
+	)
 
 	// ------------------------------
 	// Botões
