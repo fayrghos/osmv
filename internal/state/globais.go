@@ -37,6 +37,8 @@ type Globais struct {
 	BotaoContinuar ui.Botao
 	BotaoPasso     ui.Botao
 	BotaoVoltar    ui.Botao
+
+	Quadros [][]int
 }
 
 // Essa função roda algo exatamente uma vez quando uma tela inicia
