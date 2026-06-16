@@ -2,6 +2,7 @@ package screens
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/fayrghos/osmv/internal/state"
 	"github.com/fayrghos/osmv/internal/ui"
@@ -57,6 +58,22 @@ func AtualizarPrincipal(globais *state.Globais) {
 	globais.BotaoContinuar.Atualizar()
 	globais.BotaoPasso.Atualizar()
 	globais.BotaoVoltar.Atualizar()
+}
+
+func ConverterBin(valor int) int {
+	var valorBin int = 0
+	decimal := 1
+	var i int = valor
+	for i >= 1 {
+		valorBin += (i % 2) * decimal
+		decimal *= 10
+		i /= 2
+	}
+	return valorBin
+}
+
+func Traduzir(globais *state.Globais) {
+	
 }
 
 func DesenharPrincipal(globais *state.Globais) {
@@ -163,31 +180,28 @@ func DesenharPrincipal(globais *state.Globais) {
 	globais.BotaoPasso.Desenhar()
 	globais.BotaoVoltar.Desenhar()
 
-	alturaFixa := recPaginasIn.Height
-	larguraFixa := recPaginasIn.Width
-	alturaFixaMemo := recrecMemoriaIn.Height
-	larguraFixaMemo := recrecMemoriaIn.Width
-	slotPaginas := alturaFixa / float32(globais.TamPaginas)
-	slotPaginasMemo := alturaFixaMemo / float32(globais.TamFisica)
+	slotPaginas := recPaginasIn.Height / float32(globais.TamPaginas)
+	slotPaginasMemo := recrecMemoriaIn.Height / float32(globais.TamLogica)
+	diviNumBytesMemo := globais.TamFisica / globais.TamLogica
 
 	for i := 1; i < globais.TamPaginas; i++ {
 		posY := recPaginasIn.Y + float32(i)*slotPaginas
 		posIni := rl.Vector2{X: recPaginasIn.X, Y: posY}
-		posEnd := rl.Vector2{X: recPaginasIn.X + larguraFixa, Y: posY}
+		posEnd := rl.Vector2{X: recPaginasIn.X + recPaginasIn.Width, Y: posY}
 		rl.DrawLineEx(posIni, posEnd, 3, ui.CorPrincipal)
 	}
 
-	for i := 1; i < globais.TamPaginas; i++ {
-		posY := recrecQuadrosIn.Y + float32(i)*slotPaginas
-		posIni := rl.Vector2{X: recrecQuadrosIn.X, Y: posY}
-		posEnd := rl.Vector2{X: recrecQuadrosIn.X + larguraFixa, Y: posY}
-		rl.DrawLineEx(posIni, posEnd, 3, ui.CorPrincipal)
-	}
-
-	for i := 1; i < globais.TamFisica; i++ {
+	for i := 1; i < globais.TamLogica; i++ {
 		posY := recrecMemoriaIn.Y + float32(i)*slotPaginasMemo
 		posIni := rl.Vector2{X: recrecMemoriaIn.X, Y: posY}
-		posEnd := rl.Vector2{X: recrecMemoriaIn.X + larguraFixaMemo, Y: posY}
+		posEnd := rl.Vector2{X: recrecMemoriaIn.X + recrecMemoriaIn.Width, Y: posY}
 		rl.DrawLineEx(posIni, posEnd, 3, ui.CorPrincipal)
+	}
+
+	posicaoTexto := rl.Vector2{X: recMemoria.X + recMemoria.Width, Y: recrecMemoriaIn.Y - 15}
+	yInicial := recrecMemoriaIn.Y
+	for i := 0; i < globais.TamLogica+1; i++ {
+		posicaoTexto.Y = yInicial + float32(i)*slotPaginas - 20
+		rl.DrawTextEx(*globais.FonteSans, strconv.Itoa(i*diviNumBytesMemo)+"Bytes", posicaoTexto, 20, 1, rl.White)
 	}
 }
