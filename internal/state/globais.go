@@ -29,6 +29,8 @@ type Globais struct {
 
 	TamPaginas    int
 	BoxTamPaginas ui.Digibox
+	NumBits       int
+	BoxNumBits    ui.Digibox
 	TamFisica     int
 	BoxTamFisica  ui.Digibox
 	TamLogica     int

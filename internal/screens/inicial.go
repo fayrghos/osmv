@@ -10,6 +10,7 @@ import (
 // Redesenho da tela inicial
 func DesenharInicial(globais *state.Globais) {
 	globais.BoxTamPaginas.Desenhar()
+	globais.BoxNumBits.Desenhar()
 	globais.BoxTamFisica.Desenhar()
 	globais.BoxTamLogica.Desenhar()
 	globais.BotaoContinuar.Desenhar()
@@ -19,8 +20,8 @@ func DesenharInicial(globais *state.Globais) {
 func AtualizarInicial(globais *state.Globais) {
 	globais.InicializarTela(state.TelaInicial, func() {
 		globais.BoxTamPaginas = ui.Digibox{
-			Pos: rl.Vector2{X: state.Larg/2 - 250, Y: state.Altu/2 - 40 - 150},
-			Tam: rl.Vector2{X: 500, Y: 80},
+			Pos: rl.Vector2{X: state.Larg/2 - 450, Y: state.Altu/2 - 40 - 100},
+			Tam: rl.Vector2{X: 400, Y: 80},
 			Campo: utils.Texto{
 				Tam:   48,
 				Fonte: globais.FonteSans,
@@ -31,9 +32,24 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte:    globais.FonteSans,
 			},
 		}
+
+		globais.BoxNumBits = ui.Digibox{
+			Pos: rl.Vector2{X: state.Larg/2 - 450, Y: state.Altu/2 - 40 + 75},
+			Tam: rl.Vector2{X: 400, Y: 80},
+			Campo: utils.Texto{
+				Tam:   48,
+				Fonte: globais.FonteSans,
+			},
+			Titulo: utils.Texto{
+				Conteudo: "Num. Bits",
+				Tam:      32,
+				Fonte:    globais.FonteSans,
+			},
+		}
+
 		globais.BoxTamFisica = ui.Digibox{
-			Pos: rl.Vector2{X: state.Larg/2 - 250, Y: state.Altu/2 - 40},
-			Tam: rl.Vector2{X: 500, Y: 80},
+			Pos: rl.Vector2{X: state.Larg/2 + 50, Y: state.Altu/2 - 40 - 100},
+			Tam: rl.Vector2{X: 400, Y: 80},
 			Campo: utils.Texto{
 				Tam:   48,
 				Fonte: globais.FonteSans,
@@ -44,9 +60,10 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte:    globais.FonteSans,
 			},
 		}
+
 		globais.BoxTamLogica = ui.Digibox{
-			Pos: rl.Vector2{X: state.Larg/2 - 250, Y: state.Altu/2 - 40 + 150},
-			Tam: rl.Vector2{X: 500, Y: 80},
+			Pos: rl.Vector2{X: state.Larg/2 + 50, Y: state.Altu/2 - 40 + 75},
+			Tam: rl.Vector2{X: 400, Y: 80},
 			Campo: utils.Texto{
 				Tam:   48,
 				Fonte: globais.FonteSans,
@@ -57,8 +74,9 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte:    globais.FonteSans,
 			},
 		}
+
 		globais.BotaoContinuar = ui.Botao{
-			Pos: rl.Vector2{X: state.Larg/2 - 100, Y: state.Altu - 150},
+			Pos: rl.Vector2{X: state.Larg/2 - 100, Y: state.Altu - 200},
 			Tam: rl.Vector2{X: 200, Y: 80},
 			Rotulo: utils.Texto{
 				Conteudo: "Avançar",
@@ -68,10 +86,14 @@ func AtualizarInicial(globais *state.Globais) {
 			Travado: false,
 			Clique: func() {
 				globais.TamPaginas = globais.BoxTamPaginas.Exportar()
+				globais.NumBits = globais.BoxNumBits.Exportar()
 				globais.TamFisica = globais.BoxTamFisica.Exportar()
 				globais.TamLogica = globais.BoxTamLogica.Exportar()
 
-				if globais.TamPaginas == 0 || globais.TamFisica == 0 || globais.TamLogica == 0 {
+				if globais.TamPaginas == 0 ||
+					globais.NumBits == 0 ||
+					globais.TamFisica == 0 ||
+					globais.TamLogica == 0 {
 					globais.BoxErro.Definir("Todos os campos devem ser maiores que 0.")
 				} else {
 					globais.BoxErro.Definir("")
@@ -82,6 +104,7 @@ func AtualizarInicial(globais *state.Globais) {
 	})
 
 	globais.BoxTamPaginas.Atualizar()
+	globais.BoxNumBits.Atualizar()
 	globais.BoxTamFisica.Atualizar()
 	globais.BoxTamLogica.Atualizar()
 	globais.BotaoContinuar.Atualizar()
