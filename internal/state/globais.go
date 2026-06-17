@@ -9,7 +9,8 @@ type BlocoProcesso struct {
 	Texto        string
 	IntervaloBin int
 	Pagina       int
-	Coordenadas  rl.Rectangle
+	CoordBin     rl.Rectangle
+	CoordText    rl.Rectangle
 }
 
 // Tamanho da janela
