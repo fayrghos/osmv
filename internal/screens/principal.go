@@ -101,7 +101,7 @@ func InicializarSimulação(globais *state.Globais) {
 	globais.Processos = make([]state.BlocoProcesso, 10)
 	numPaginas = make([]int, globais.TamPaginas)
 	temp := globais.NumBits / 10
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		globais.Processos[i].Texto = textosPaginas[i].valor
 		globais.Processos[i].IntervaloBin = ConverterBin(i * temp)
 	}
@@ -140,23 +140,23 @@ func ExibidorSimulacao(globais *state.Globais, pivo int, rec rl.Rectangle, recTa
 
 func DesenharPrincipal(globais *state.Globais) {
 	// ------------------------------
-	// Páginas
+	// Processos
 	// ------------------------------
-	recPaginas := rl.Rectangle{
+	recProcessos := rl.Rectangle{
 		X:      77,
 		Y:      77,
 		Width:  230,
 		Height: 614,
 	}
-	rl.DrawRectangleRounded(recPaginas, 0.1, 4, ui.CorPrincipal)
+	rl.DrawRectangleRounded(recProcessos, 0.1, 4, ui.CorPrincipal)
 
-	recPaginasIn := rl.Rectangle{
+	recProcessosIn := rl.Rectangle{
 		X:      88,
 		Y:      146,
 		Width:  208,
 		Height: 533,
 	}
-	rl.DrawRectangleRec(recPaginasIn, ui.CorSecundaria)
+	rl.DrawRectangleRec(recProcessosIn, ui.CorSecundaria)
 
 	rl.DrawRectangleRec(
 		rl.Rectangle{
@@ -168,43 +168,73 @@ func DesenharPrincipal(globais *state.Globais) {
 		ui.CorPrincipal,
 	)
 
+	utils.DesenharTextoCentro(
+		utils.Texto{
+			Conteudo: "Processos",
+			Tam:      32,
+			Fonte:    globais.FonteSans,
+		},
+		rl.Vector2{X: 192, Y: 111},
+		rl.White,
+	)
+
 	// ------------------------------
-	// Quadros
+	// Páginas
 	// ------------------------------
-	recQuadros := rl.Rectangle{
+	recPaginas := rl.Rectangle{
 		X:      338,
 		Y:      77,
 		Width:  230,
 		Height: 614,
 	}
-	rl.DrawRectangleRounded(recQuadros, 0.1, 4, ui.CorPrincipal)
+	rl.DrawRectangleRounded(recPaginas, 0.1, 4, ui.CorPrincipal)
 
-	recrecQuadrosIn := rl.Rectangle{
+	recPaginasIn := rl.Rectangle{
 		X:      348,
 		Y:      146,
 		Width:  208,
 		Height: 533,
 	}
-	rl.DrawRectangleRec(recrecQuadrosIn, ui.CorSecundaria)
+	rl.DrawRectangleRec(recPaginasIn, ui.CorSecundaria)
+
+	utils.DesenharTextoCentro(
+		utils.Texto{
+			Conteudo: "Páginas",
+			Tam:      32,
+			Fonte:    globais.FonteSans,
+		},
+		rl.Vector2{X: 452, Y: 111},
+		rl.White,
+	)
 
 	// ------------------------------
-	// Tabela
+	// Operações
 	// ------------------------------
-	recTabela := rl.Rectangle{
+	recOperacoes := rl.Rectangle{
 		X:      598,
 		Y:      77,
 		Width:  268,
 		Height: 352,
 	}
-	rl.DrawRectangleRounded(recTabela, 0.08, 4, ui.CorPrincipal)
+	rl.DrawRectangleRounded(recOperacoes, 0.08, 4, ui.CorPrincipal)
 
-	recrecTabelaIn := rl.Rectangle{
+	recOperacoesIn := rl.Rectangle{
 		X:      609,
 		Y:      146,
 		Width:  245,
 		Height: 271,
 	}
-	rl.DrawRectangleRec(recrecTabelaIn, ui.CorSecundaria)
+	rl.DrawRectangleRec(recOperacoesIn, ui.CorSecundaria)
+
+	utils.DesenharTextoCentro(
+		utils.Texto{
+			Conteudo: "Operações",
+			Tam:      32,
+			Fonte:    globais.FonteSans,
+		},
+		rl.Vector2{X: 730, Y: 111},
+		rl.White,
+	)
 
 	// ------------------------------
 	// Memória
@@ -217,13 +247,13 @@ func DesenharPrincipal(globais *state.Globais) {
 	}
 	rl.DrawRectangleRounded(recMemoria, 0.05, 4, ui.CorPrincipal)
 
-	recrecMemoriaIn := rl.Rectangle{
+	recMemoriaIn := rl.Rectangle{
 		X:      907,
 		Y:      146,
 		Width:  371,
 		Height: 533,
 	}
-	rl.DrawRectangleRec(recrecMemoriaIn, ui.CorSecundaria)
+	rl.DrawRectangleRec(recMemoriaIn, ui.CorSecundaria)
 
 	rl.DrawRectangleRec(
 		rl.Rectangle{
@@ -235,6 +265,16 @@ func DesenharPrincipal(globais *state.Globais) {
 		ui.CorPrincipal,
 	)
 
+	utils.DesenharTextoCentro(
+		utils.Texto{
+			Conteudo: "Memória Física",
+			Tam:      32,
+			Fonte:    globais.FonteSans,
+		},
+		rl.Vector2{X: 1093, Y: 111},
+		rl.White,
+	)
+
 	// ------------------------------
 	// Botões
 	// ------------------------------
@@ -242,47 +282,47 @@ func DesenharPrincipal(globais *state.Globais) {
 	globais.BotaoPasso.Desenhar()
 	globais.BotaoVoltar.Desenhar()
 
-	slotPaginas := recrecQuadrosIn.Height / float32(globais.TamPaginas)
-	slotPaginasMemo := recrecMemoriaIn.Height / float32(globais.TamLogica)
+	slotPaginas := recPaginasIn.Height / float32(globais.TamPaginas)
+	slotPaginasMemo := recMemoriaIn.Height / float32(globais.TamLogica)
 
 	for i := 1; i < globais.TamPaginas; i++ {
-		posY := recrecQuadrosIn.Y + float32(i)*slotPaginas
-		posIni := rl.Vector2{X: recrecQuadrosIn.X, Y: posY}
-		posEnd := rl.Vector2{X: recrecQuadrosIn.X + recPaginasIn.Width, Y: posY}
+		posY := recPaginasIn.Y + float32(i)*slotPaginas
+		posIni := rl.Vector2{X: recPaginasIn.X, Y: posY}
+		posEnd := rl.Vector2{X: recPaginasIn.X + recProcessosIn.Width, Y: posY}
 		rl.DrawLineEx(posIni, posEnd, 3, ui.CorPrincipal)
 	}
 
 	for i := 1; i < globais.TamLogica; i++ {
-		posY := recrecMemoriaIn.Y + float32(i)*slotPaginasMemo
-		posIni := rl.Vector2{X: recrecMemoriaIn.X, Y: posY}
-		posEnd := rl.Vector2{X: recrecMemoriaIn.X + recrecMemoriaIn.Width, Y: posY}
+		posY := recMemoriaIn.Y + float32(i)*slotPaginasMemo
+		posIni := rl.Vector2{X: recMemoriaIn.X, Y: posY}
+		posEnd := rl.Vector2{X: recMemoriaIn.X + recMemoriaIn.Width, Y: posY}
 		rl.DrawLineEx(posIni, posEnd, 3, ui.CorPrincipal)
 	}
 
-	centroTabelaPaginas := ((recPaginasIn.X + recPaginasIn.Width) / 2) + 20
-	slotTabelaFixa := recPaginasIn.Height / 10
-	for i := 0; i < 10; i++ {
-		posY := recPaginasIn.Y + float32(i)*slotTabelaFixa
+	centroTabelaPaginas := ((recProcessosIn.X + recProcessosIn.Width) / 2) + 20
+	slotTabelaFixa := recProcessosIn.Height / 10
+	for i := range 10 {
+		posY := recProcessosIn.Y + float32(i)*slotTabelaFixa
 
 		rl.DrawText(textosPaginas[i].valor, int32(centroTabelaPaginas), int32(posY+20), 20, rl.White)
 
 		if i < 9 {
 			linhaY := posY + slotTabelaFixa
-			posIni := rl.Vector2{X: recPaginasIn.X, Y: linhaY}
-			posEnd := rl.Vector2{X: recPaginasIn.X + recPaginasIn.Width, Y: linhaY}
+			posIni := rl.Vector2{X: recProcessosIn.X, Y: linhaY}
+			posEnd := rl.Vector2{X: recProcessosIn.X + recProcessosIn.Width, Y: linhaY}
 			rl.DrawLineEx(posIni, posEnd, 3, ui.CorPrincipal)
 		}
 	}
 
-	ExibidorSimulacao(globais, pivo, recrecQuadrosIn, recrecTabelaIn)
+	ExibidorSimulacao(globais, pivo, recPaginasIn, recOperacoesIn)
 
 	// ------------------------------
 	// Texto Bits Centralizar dps
 	// ------------------------------
 
 	diviNumBytesMemo := globais.TamFisica / globais.TamLogica
-	posicaoTexto := rl.Vector2{X: recMemoria.X, Y: recrecMemoriaIn.Y + 30}
-	yInicial := recrecMemoriaIn.Y
+	posicaoTexto := rl.Vector2{X: recMemoria.X, Y: recMemoriaIn.Y + 30}
+	yInicial := recMemoriaIn.Y
 
 	for i := 0; i < globais.TamLogica+1; i++ {
 		posicaoTexto.Y = yInicial + float32(i)*slotPaginasMemo - 20
@@ -291,8 +331,8 @@ func DesenharPrincipal(globais *state.Globais) {
 
 	//Texto tabela
 	diviNumBytesPage := globais.NumBits / globais.TamPaginas
-	posicaoTextoQuadros := rl.Vector2{X: recrecQuadrosIn.X, Y: recrecQuadrosIn.Y + 30}
-	yInicialQuadros := recrecQuadrosIn.Y
+	posicaoTextoQuadros := rl.Vector2{X: recPaginasIn.X, Y: recPaginasIn.Y + 30}
+	yInicialQuadros := recPaginasIn.Y
 
 	for i := 0; i < globais.TamPaginas+1; i++ {
 		posicaoTextoQuadros.Y = yInicialQuadros + float32(i)*slotPaginas
@@ -301,10 +341,10 @@ func DesenharPrincipal(globais *state.Globais) {
 
 	//Texto tabela fixa
 	diviNumBytesFixo := globais.NumBits / 10
-	posicaoTextoFixo := rl.Vector2{X: recPaginasIn.X, Y: recPaginasIn.Y + 30}
-	yInicialFixo := recPaginasIn.Y
+	posicaoTextoFixo := rl.Vector2{X: recProcessosIn.X, Y: recProcessosIn.Y + 30}
+	yInicialFixo := recProcessosIn.Y
 
-	for i := 0; i < 11; i++ {
+	for i := range 11 {
 		posicaoTextoFixo.Y = yInicialFixo + float32(i)*slotTabelaFixa
 		rl.DrawTextEx(*globais.FonteSans, strconv.Itoa(i*diviNumBytesFixo), posicaoTextoFixo, 20, 1, rl.White)
 	}

@@ -1,6 +1,10 @@
 package utils
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"image/color"
+
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 // Armazena facilmente objetos comuns de texto
 type Texto struct {
@@ -25,4 +29,17 @@ func CarregarFonte(caminho string, tam int32) rl.Font {
 // É tipo o IsKeyDown(), mas apropriado pra digitação
 func IsKeyPressedDouble(key int32) bool {
 	return rl.IsKeyPressed(key) || rl.IsKeyPressedRepeat(key)
+}
+
+// Desenha um texto centralizado em 'pos'
+func DesenharTextoCentro(texto Texto, pos rl.Vector2, cor color.RGBA) {
+	medidaTexPaginas := rl.MeasureTextEx(*texto.Fonte, texto.Conteudo, texto.Tam, 1)
+	rl.DrawTextEx(
+		*texto.Fonte,
+		texto.Conteudo,
+		pos.Subtract(medidaTexPaginas.Scale(0.5)),
+		texto.Tam,
+		1,
+		cor,
+	)
 }
