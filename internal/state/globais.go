@@ -5,6 +5,13 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+type BlocoProcesso struct {
+	Texto        string
+	IntervaloBin int
+	Pagina       int
+	Coordenadas  rl.Rectangle
+}
+
 // Tamanho da janela
 const (
 	Larg = 1366
@@ -40,7 +47,7 @@ type Globais struct {
 	BotaoPasso     ui.Botao
 	BotaoVoltar    ui.Botao
 
-	Quadros [][]int
+	Processos []BlocoProcesso
 }
 
 // Essa função roda algo exatamente uma vez quando uma tela inicia
