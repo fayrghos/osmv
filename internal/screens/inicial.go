@@ -16,7 +16,7 @@ func DesenharInicial(globais *state.Globais) {
 	globais.BotaoContinuar.Desenhar()
 }
 
-// Redesenho da tela inicial
+// Lógica da tela inicial
 func AtualizarInicial(globais *state.Globais) {
 	globais.InicializarTela(state.TelaInicial, func() {
 		globais.BoxTamPaginas = ui.Digibox{
@@ -73,6 +73,13 @@ func AtualizarInicial(globais *state.Globais) {
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
+		}
+
+		if globais.ModoRapido {
+			globais.BoxTamPaginas.Campo.Conteudo = "4"
+			globais.BoxTamFisica.Campo.Conteudo = "8"
+			globais.BoxNumBits.Campo.Conteudo = "16"
+			globais.BoxTamLogica.Campo.Conteudo = "4"
 		}
 
 		globais.BotaoContinuar = ui.Botao{

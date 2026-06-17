@@ -38,6 +38,7 @@ var (
 	textosPaginas = []vetorTexto{{"7A4B92C1"}, {"3F8E2D56"}, {"9C104B7E"}, {"D52A8F43"}, {"6B491E2C"}, {"8E3C9A57"}, {"2F5B8D10"}, {"C9A4E6B2"}, {"41D2B8E9"}, {"E07F3C4A"}}
 )
 
+// Lógica da tela principal
 func AtualizarPrincipal(globais *state.Globais) {
 	recrecQuadrosIn := rl.Rectangle{
 		X:      348,
@@ -193,7 +194,7 @@ func ExibidorSimulacao(globais *state.Globais, i int) {
 			flip = 2
 		}
 
-		for j := 0; j < i; j++ {
+		for j := range i {
 			if globais.Processos[j].Pagina == proc.Pagina {
 				if globais.Processos[j].CoordText == proc.CoordText {
 					colisao++
@@ -212,6 +213,7 @@ func ExibidorSimulacao(globais *state.Globais, i int) {
 	}
 }
 
+// Redesenho da tela principal
 func DesenharPrincipal(globais *state.Globais) {
 	// ------------------------------
 	// Processos
@@ -356,6 +358,9 @@ func DesenharPrincipal(globais *state.Globais) {
 	globais.BotaoPasso.Desenhar()
 	globais.BotaoVoltar.Desenhar()
 
+	// ------------------------------
+	// Etc.
+	// ------------------------------
 	slotPaginas := recPaginasIn.Height / float32(globais.TamPaginas)
 	slotPaginasMemo := recMemoriaIn.Height / float32(globais.TamLogica)
 

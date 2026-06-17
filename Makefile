@@ -1,10 +1,17 @@
 BIN := ./bin/osmv
+ARGS :=
 FLAGS :=
 
 
 # Roda casualmente o programa
 normal: compilar
-	./$(BIN)
+	./$(BIN) $(ARGS)
+
+
+# Executa o programa no modo rápido
+rapido r: ARGS += --rapido
+rapido r: compilar
+	./$(BIN) $(ARGS)
 
 
 # Chama o GDB para fazer debug
@@ -19,4 +26,4 @@ compilar:
 	go build -gcflags="$(FLAGS)" -tags x11 -o $(BIN) .
 
 
-.PHONY: all debug d compilar
+.PHONY: all rapido r debug d compilar
