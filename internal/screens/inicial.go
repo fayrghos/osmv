@@ -75,6 +75,13 @@ func AtualizarInicial(globais *state.Globais) {
 			},
 		}
 
+		if globais.ModoRapido {
+			globais.BoxTamPaginas.Campo.Conteudo = "4"
+			globais.BoxTamFisica.Campo.Conteudo = "8"
+			globais.BoxNumBits.Campo.Conteudo = "16"
+			globais.BoxTamLogica.Campo.Conteudo = "4"
+		}
+
 		globais.BotaoContinuar = ui.Botao{
 			Pos: rl.Vector2{X: state.Larg/2 - 100, Y: state.Altu - 200},
 			Tam: rl.Vector2{X: 200, Y: 80},

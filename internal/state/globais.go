@@ -29,8 +29,9 @@ const (
 
 // Como é bom te ver de novo, Globs!
 type Globais struct {
-	FonteSans *rl.Font
-	BoxErro   ui.Errobox
+	FonteSans  *rl.Font
+	BoxErro    ui.Errobox
+	ModoRapido bool
 
 	TelaAtual      Tela
 	telasIniciadas map[Tela]bool

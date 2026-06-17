@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+
 	"github.com/fayrghos/osmv/internal/screens"
 	"github.com/fayrghos/osmv/internal/state"
 	"github.com/fayrghos/osmv/internal/ui"
@@ -9,6 +11,9 @@ import (
 )
 
 func main() {
+	modoRapido := flag.Bool("rapido", false, "ativa o modo rápido")
+	flag.Parse()
+
 	rl.SetConfigFlags(rl.FlagMsaa4xHint)
 	rl.InitWindow(1366, 768, "OSMV")
 	defer rl.CloseWindow()
@@ -25,7 +30,8 @@ func main() {
 	defer rl.UnloadFont(fonteSans)
 
 	globais := state.Globais{
-		FonteSans: &fonteSans,
+		FonteSans:  &fonteSans,
+		ModoRapido: *modoRapido,
 		BoxErro: ui.Errobox{
 			Pos: rl.Vector2{X: state.Larg/2 - 400, Y: 35},
 			Tam: rl.Vector2{X: 800, Y: 60},
