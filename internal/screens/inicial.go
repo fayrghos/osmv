@@ -16,7 +16,7 @@ func DesenharInicial(globais *state.Globais) {
 	globais.BotaoContinuar.Desenhar()
 }
 
-// Redesenho da tela inicial
+// Lógica da tela inicial
 func AtualizarInicial(globais *state.Globais) {
 	globais.InicializarTela(state.TelaInicial, func() {
 		globais.BoxTamPaginas = ui.Digibox{

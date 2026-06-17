@@ -15,7 +15,7 @@ func main() {
 	flag.Parse()
 
 	rl.SetConfigFlags(rl.FlagMsaa4xHint)
-	rl.InitWindow(1366, 768, "OSMV")
+	rl.InitWindow(state.Larg, state.Altu, "OSMV")
 	defer rl.CloseWindow()
 
 	rl.SetTargetFPS(60)
