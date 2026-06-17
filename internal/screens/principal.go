@@ -17,13 +17,40 @@ type vetorTexto struct {
 }
 
 var (
-	pivo          = -1
-	once          sync.Once
-	numPaginas    []int
+	pivo       = -1
+	once       sync.Once
+	once2      sync.Once
+	numPaginas []int
+	recBaseBin rl.Rectangle = rl.Rectangle{
+		X:      609,
+		Y:      146,
+		Width:  245,
+		Height: 271,
+	}
+	recBusca rl.Rectangle = rl.Rectangle{
+		X:      609,
+		Y:      146,
+		Width:  0,
+		Height: 271,
+	}
+	flip          = 1
 	textosPaginas = []vetorTexto{{"7A4B92C1"}, {"3F8E2D56"}, {"9C104B7E"}, {"D52A8F43"}, {"6B491E2C"}, {"8E3C9A57"}, {"2F5B8D10"}, {"C9A4E6B2"}, {"41D2B8E9"}, {"E07F3C4A"}}
 )
 
 func AtualizarPrincipal(globais *state.Globais) {
+	recrecQuadrosIn := rl.Rectangle{
+		X:      348,
+		Y:      146,
+		Width:  208,
+		Height: 533,
+	}
+	recrecTabelaIn := rl.Rectangle{
+		X:      609,
+		Y:      146,
+		Width:  245,
+		Height: 271,
+	}
+
 	once.Do(func() {
 		InicializarSimulação(globais)
 	})
@@ -38,15 +65,19 @@ func AtualizarPrincipal(globais *state.Globais) {
 			},
 			Travado: false,
 			Clique: func() {
+				once2.Do(func() {
+					soma(globais)
+				})
 				if pivo < -1 {
 					pivo = -1
 				} else if pivo > globais.TamPaginas*2 {
 					return
 				}
-				if pivo < globais.TamPaginas {
+				if pivo < 10 {
 					pivo++
 					globais.Processos[pivo].Pagina = VerificadorSimulacao(globais, pivo)
-
+					globais.Processos[pivo].CoordBin = recrecTabelaIn
+					globais.Processos[pivo].CoordText = recrecQuadrosIn
 				}
 			},
 		}
@@ -126,15 +157,52 @@ func VerificadorSimulacao(globais *state.Globais, pivo int) int {
 	return -1
 }
 
-func ExibidorSimulacao(globais *state.Globais, pivo int, rec rl.Rectangle, recTabela rl.Rectangle) {
-	if pivo >= 0 && pivo < len(globais.Processos) {
-		if globais.Processos[pivo].Pagina >= 0 || globais.Processos[pivo].Pagina < globais.TamPaginas {
-			rl.DrawText(globais.Processos[pivo].Texto, int32((rec.X+rec.Width)/2),
-				int32(rec.Y*(float32(globais.Processos[pivo].Pagina+1))), 10, rl.White)
-		}
-		rl.DrawText(strconv.Itoa(globais.Processos[pivo].IntervaloBin), int32((recTabela.X+recTabela.Width)/2),
-			int32(recTabela.Y), 10, rl.White)
+func soma(globais *state.Globais) {
+	bitsParaValidar := float32(globais.TamPaginas / 2)
+	recBusca.X = 615
+	recBusca.Y = 156
+	recBusca.Width = bitsParaValidar*12 + 4
+	recBusca.Height = recBaseBin.Height
+}
 
+func ExibidorSimulacao(globais *state.Globais, i int) {
+	if i < 0 || i >= len(globais.Processos) {
+		return
+	}
+
+	proc := globais.Processos[i]
+	alturaLinhaOperacao := float32(25)
+	yOperacao := proc.CoordBin.Y + 15 + (float32(i) * alturaLinhaOperacao)
+	xOperacao := proc.CoordBin.X + 15
+	rl.DrawText(strconv.Itoa(proc.IntervaloBin), int32(xOperacao), int32(yOperacao), 20, rl.White)
+
+	if proc.Pagina >= 0 && proc.Pagina < globais.TamPaginas {
+
+		slotAlturaQuadros := proc.CoordText.Height / float32(globais.TamPaginas)
+		yQuadro := proc.CoordText.Y + (float32(proc.Pagina) * slotAlturaQuadros) + (slotAlturaQuadros / 2) - 50
+		xQuadro := proc.CoordText.X + (proc.CoordText.Width / 2) - 80
+		colisao := 0
+
+		if yQuadro > recBaseBin.Height {
+			flip = 2
+		}
+
+		for j := 0; j < i; j++ {
+			if globais.Processos[j].Pagina == proc.Pagina {
+				if globais.Processos[j].CoordText == proc.CoordText {
+					colisao++
+				}
+			}
+		}
+
+		if colisao > 0 {
+			deslocamentoX := float32(colisao%2) * 90
+			deslocamentoY := float32(colisao/2) * 30
+			xQuadro += deslocamentoX
+			yQuadro += deslocamentoY
+		}
+
+		rl.DrawText(proc.Texto, int32(xQuadro), int32(yQuadro), 16, rl.White)
 	}
 }
 
@@ -314,7 +382,10 @@ func DesenharPrincipal(globais *state.Globais) {
 		}
 	}
 
-	ExibidorSimulacao(globais, pivo, recPaginasIn, recOperacoesIn)
+	//Chamada da função para exibir a simulação
+	for i := 0; i <= pivo; i++ {
+		ExibidorSimulacao(globais, i)
+	}
 
 	// ------------------------------
 	// Texto Bits Centralizar dps
@@ -348,4 +419,18 @@ func DesenharPrincipal(globais *state.Globais) {
 		posicaoTextoFixo.Y = yInicialFixo + float32(i)*slotTabelaFixa
 		rl.DrawTextEx(*globais.FonteSans, strconv.Itoa(i*diviNumBytesFixo), posicaoTextoFixo, 20, 1, rl.White)
 	}
+
+	if pivo >= 0 {
+		rl.DrawRectangleLinesEx(
+			rl.Rectangle{
+				X:      recBusca.X,
+				Y:      recBusca.Y,
+				Width:  recBusca.Width,
+				Height: recBusca.Height,
+			},
+			4,
+			rl.Red,
+		)
+	}
+
 }
