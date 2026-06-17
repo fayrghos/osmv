@@ -18,6 +18,7 @@ type vetorTexto struct {
 
 var (
 	pivo       = -1
+	pivoMemo   = -1
 	once       sync.Once
 	once2      sync.Once
 	numPaginas []int
@@ -104,9 +105,14 @@ func AtualizarPrincipal(globais *state.Globais) {
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
-			Travado: true,
+			Travado: false,
 			Clique: func() {
-				fmt.Println("Clicaram em voltar!!")
+				if pivo < -1 {
+					pivo = -1
+				}
+				if pivo >= 0 {
+					pivo--
+				}
 			},
 		}
 	})
@@ -162,7 +168,7 @@ func soma(globais *state.Globais) {
 	recBusca.X = 615
 	recBusca.Y = 156
 	recBusca.Width = bitsParaValidar*12 + 4
-	recBusca.Height = recBaseBin.Height
+	recBusca.Height = recBaseBin.Height - 20
 }
 
 func ExibidorSimulacao(globais *state.Globais, i int) {
@@ -428,7 +434,7 @@ func DesenharPrincipal(globais *state.Globais) {
 				Width:  recBusca.Width,
 				Height: recBusca.Height,
 			},
-			4,
+			2,
 			rl.Red,
 		)
 	}
