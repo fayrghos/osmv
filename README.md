@@ -10,13 +10,14 @@ O programa foi projeto para operar utilizando o mouse como principal ferramenta.
 
 - `bin/`: Contém os executáveis após compilações.
 - `assets/`: Contém mídia em geral a ser exibida no programa.
-- `internal/`: Contém todo a lógica interna do programa.
+- `internal/`: Contém toda a lógica interna do programa.
 
 ## Desenvolvimento
 
-Para desenvolver o projeto, é necessário ter um compilador de Go e a biblioteca Raylib instalados em sua máquina. Qualquer ambiente de desenvolvimento pode ser utilizado.
+Para desenvolver o projeto, é necessário ter um compilador de Go, o Make e a biblioteca raylib-go instalados em sua máquina. Qualquer ambiente de desenvolvimento pode ser utilizado.
 
-- [Guia de Instalação](https://github.com/gen2brain/raylib-go/tree/master/examples)
+- [Instalação do Go](https://go.dev/doc/install)
+- [Instalação da raylib-go](https://github.com/gen2brain/raylib-go#requirements)
 
 ## Compilando
 
@@ -45,3 +46,7 @@ Caso o programa esteja com algum bug estranho e você queira fazer um debug, bas
 ```bash
 make debug # "make d" também é aceito.
 ```
+
+## Apêndice
+
+![QueOSMV](./assets/repo/queosmv.jpeg)
