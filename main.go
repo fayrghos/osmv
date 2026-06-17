@@ -16,6 +16,11 @@ func main() {
 	rl.SetTargetFPS(60)
 	rl.SetExitKey(rl.KeyNull)
 
+	icone := rl.LoadImage("./assets/images/icon.png")
+	defer rl.UnloadImage(icone)
+
+	rl.SetWindowIcon(*icone)
+
 	fonteSans := utils.CarregarFonte("./assets/fonts/LiberationSans.ttf", 28)
 	defer rl.UnloadFont(fonteSans)
 
