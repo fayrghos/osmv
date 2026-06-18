@@ -184,13 +184,19 @@ func InicializarSimulação(globais *state.Globais) {
 }
 
 func VerificadorSimulacao(globais *state.Globais, pivo int) int {
-	if pivo < 0 {
+	if pivo < 0 || globais.TamPaginas <= 0 {
 		return -1
 	}
-	bitsParaValidar := globais.TamPaginas / 2
+
+	bitsParaValidar := int(math.Log2(float64(globais.TamPaginas)))
+	if bitsParaValidar < 1 {
+		bitsParaValidar = 1
+	}
+
 	i := globais.Processos[pivo].IntervaloBin
 	for ; i >= int(math.Pow10(bitsParaValidar)); i /= 10 {
 	}
+
 	for j := 0; j < globais.TamPaginas; j++ {
 		if i == numPaginas[j] {
 			return j
@@ -199,8 +205,22 @@ func VerificadorSimulacao(globais *state.Globais, pivo int) int {
 	return -1
 }
 
+func 固定(globais *state.Globais) {
+	bitsParaValidar := float32(math.Log2(float64(globais.TamPaginas)))
+	if bitsParaValidar < 1 {
+		bitsParaValidar = 1
+	}
+	recBusca.X = 615
+	recBusca.Y = 156
+	recBusca.Width = bitsParaValidar*12 + 4
+	recBusca.Height = recBaseBin.Height - 20
+}
+
 func soma(globais *state.Globais) {
-	bitsParaValidar := float32(globais.TamPaginas / 2)
+	bitsParaValidar := float32(math.Log2(float64(globais.TamPaginas)))
+	if bitsParaValidar < 1 {
+		bitsParaValidar = 1
+	}
 	recBusca.X = 615
 	recBusca.Y = 156
 	recBusca.Width = bitsParaValidar*12 + 4
@@ -215,33 +235,31 @@ func ExibidorMemoria(globais *state.Globais, i int) {
 	proc := Memoria.TabelaMemo[i]
 
 	if proc.Valor >= 0 && proc.Valor < globais.TamPaginas {
-		tamTexto := rl.MeasureTextEx(*globais.FonteSans, proc.Nome, 20, 1)
-		slotAlturaQuadros := proc.Coordenada.Height / float32(globais.TamPaginas)
-		yQuadro := proc.Coordenada.Y + (float32(proc.Valor) * slotAlturaQuadros) + (slotAlturaQuadros / 2)
-		xQuadro := (proc.Coordenada.X + (proc.Coordenada.Width / 2))
-		centroX := xQuadro - (float32(tamTexto.X) / 2)
-		centroY := yQuadro - (float32(tamTexto.Y) / 2)
-		colisao := 0
+		slotAlturaQuadros := proc.Coordenada.Height / float32(globais.TamLogica)
+		yQuadro := proc.Coordenada.Y + (float32(proc.Valor) * slotAlturaQuadros) + (slotAlturaQuadros / 2) - 10
+		xQuadro := proc.Coordenada.X + 45
 
+		colisao := 0
 		for j := 0; j < i; j++ {
 			if Memoria.TabelaMemo[j].Valor == proc.Valor {
-				if Memoria.TabelaMemo[j].Coordenada == proc.Coordenada {
-					colisao++
-				}
+				colisao++
 			}
 		}
 
 		if colisao > 0 {
-			deslocamentoX := float32(colisao%2) * 90
-			deslocamentoY := float32(colisao/2) * 30
+			deslocamentoX := float32(colisao%2) * 95
+			deslocamentoY := float32(colisao/2) * 22
 			xQuadro += deslocamentoX
 			yQuadro += deslocamentoY
+			if colisao >= 2 {
+				yQuadro -= 6
+			}
 		}
 
 		rl.DrawTextEx(
 			*globais.FonteSans,
 			proc.Nome,
-			rl.Vector2{X: centroX, Y: centroY},
+			rl.Vector2{X: xQuadro, Y: yQuadro},
 			20,
 			1,
 			rl.White,
@@ -269,23 +287,30 @@ func ExibidorSimulacao(globais *state.Globais, i int) {
 
 	if proc.Pagina >= 0 && proc.Pagina < globais.TamPaginas {
 		slotAlturaQuadros := proc.CoordText.Height / float32(globais.TamPaginas)
-		yQuadro := proc.CoordText.Y + (float32(proc.Pagina) * slotAlturaQuadros) + (slotAlturaQuadros / 2) - 50
-		xQuadro := proc.CoordText.X + (proc.CoordText.Width / 2) - 80
-		colisao := 0
 
-		for j := range i {
+		// Centralização base vertical ajustada para o tamanho 16
+		yQuadro := proc.CoordText.Y + (float32(proc.Pagina) * slotAlturaQuadros) + (slotAlturaQuadros / 2) - 8
+
+		// Margem esquerda estável para alinhar a grade perfeitamente
+		xQuadro := proc.CoordText.X + 50
+
+		colisao := 0
+		for j := 0; j < i; j++ {
 			if globais.Processos[j].Pagina == proc.Pagina {
-				if globais.Processos[j].CoordText == proc.CoordText {
-					colisao++
-				}
+				colisao++
 			}
 		}
 
+		// CORREÇÃO: Multiplicadores expandidos (80px horizontal / 18px vertical) para dar o respiro necessário
 		if colisao > 0 {
-			deslocamentoX := float32(colisao%2) * 90
-			deslocamentoY := float32(colisao/2) * 30
+			deslocamentoX := float32(colisao%2) * 80
+			deslocamentoY := float32(colisao/2) * 18
 			xQuadro += deslocamentoX
 			yQuadro += deslocamentoY
+
+			if colisao >= 2 {
+				yQuadro -= 5
+			}
 		}
 
 		rl.DrawTextEx(*globais.FonteSans, proc.Texto, rl.Vector2{X: xQuadro, Y: yQuadro}, 16, 1, rl.White)
@@ -350,6 +375,16 @@ func DesenharPrincipal(globais *state.Globais) {
 		Height: 533,
 	}
 	rl.DrawRectangleRec(recPaginasIn, ui.CorSecundaria)
+
+	rl.DrawRectangleRec(
+		rl.Rectangle{
+			X:      381,
+			Y:      146,
+			Width:  3,
+			Height: 533,
+		},
+		ui.CorPrincipal,
+	)
 
 	utils.DesenharTextoCentro(
 		utils.Texto{
@@ -442,7 +477,7 @@ func DesenharPrincipal(globais *state.Globais) {
 	for i := 1; i < globais.TamPaginas; i++ {
 		posY := recPaginasIn.Y + float32(i)*slotPaginas
 		posIni := rl.Vector2{X: recPaginasIn.X, Y: posY}
-		posEnd := rl.Vector2{X: recPaginasIn.X + recProcessosIn.Width, Y: posY}
+		posEnd := rl.Vector2{X: recPaginasIn.X + recPaginasIn.Width, Y: posY}
 		rl.DrawLineEx(posIni, posEnd, 3, ui.CorPrincipal)
 	}
 
@@ -484,26 +519,24 @@ func DesenharPrincipal(globais *state.Globais) {
 	}
 
 	// ------------------------------
-	// Texto Bits Centralizar dps
+	// Texto Bits
 	// ------------------------------
 
 	diviNumBytesMemo := globais.TamFisica / globais.TamLogica
-	posicaoTexto := rl.Vector2{X: recMemoria.X + 18, Y: recMemoriaIn.Y + 50}
 	yInicial := recMemoriaIn.Y
 
 	for i := range globais.TamLogica {
-		posicaoTexto.Y = yInicial + float32(i)*slotPaginasMemo
-		rl.DrawTextEx(*globais.FonteSans, fmt.Sprintf("%02d", i*diviNumBytesMemo), posicaoTexto, 20, 1, rl.White)
+		posY := yInicial + float32(i)*slotPaginasMemo + (slotPaginasMemo / 2) - 10
+		rl.DrawTextEx(*globais.FonteSans, fmt.Sprintf("%02d", i*diviNumBytesMemo), rl.Vector2{X: recMemoria.X + 12, Y: posY}, 20, 1, rl.White)
 	}
 
 	//Texto tabela
 	diviNumBytesPage := globais.NumBits / globais.TamPaginas
-	posicaoTextoQuadros := rl.Vector2{X: recPaginasIn.X, Y: recPaginasIn.Y + 30}
 	yInicialQuadros := recPaginasIn.Y
 
 	for i := range globais.TamPaginas {
-		posicaoTextoQuadros.Y = yInicialQuadros + float32(i)*slotPaginas
-		rl.DrawTextEx(*globais.FonteSans, strconv.Itoa(i*diviNumBytesPage), posicaoTextoQuadros, 20, 1, rl.White)
+		posY := yInicialQuadros + float32(i)*slotPaginas + (slotPaginas / 2) - 10
+		rl.DrawTextEx(*globais.FonteSans, fmt.Sprintf("%02d", i*diviNumBytesPage), rl.Vector2{X: recPaginasIn.X + 6, Y: posY}, 20, 1, rl.White)
 	}
 
 	//Texto tabela fixa
