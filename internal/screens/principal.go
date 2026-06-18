@@ -69,7 +69,7 @@ func AtualizarPrincipal(globais *state.Globais) {
 			Pos: rl.Vector2{X: 598, Y: 441},
 			Tam: rl.Vector2{X: 268, Y: 75},
 			Rotulo: utils.Texto{
-				Conteudo: "Continuar",
+				Conteudo: "Avançar",
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
@@ -78,6 +78,9 @@ func AtualizarPrincipal(globais *state.Globais) {
 				once2.Do(func() {
 					soma(globais)
 				})
+				globais.BotaoVoltar.Travado = false
+				globais.BotaoReiniciar.Travado = false
+
 				if pivo < -1 {
 					pivo = -1
 				}
@@ -96,36 +99,27 @@ func AtualizarPrincipal(globais *state.Globais) {
 					})
 					if pivoMemo < globais.TamLogica-1 {
 						pivoMemo++
+						if pivoMemo == globais.TamLogica-1 {
+							globais.BotaoContinuar.Travado = true
+						}
 						Memoria.TabelaMemo[pivoMemo].Coordenada = recMemo
 					}
 				}
 			},
 		}
 
-		globais.BotaoPasso = ui.Botao{
-			Pos: rl.Vector2{X: 598, Y: 528},
-			Tam: rl.Vector2{X: 268, Y: 75},
-			Rotulo: utils.Texto{
-				Conteudo: "Passo",
-				Tam:      32,
-				Fonte:    globais.FonteSans,
-			},
-			Travado: false,
-			Clique: func() {
-				fmt.Println("Clicaram em passo!!")
-			},
-		}
-
 		globais.BotaoVoltar = ui.Botao{
-			Pos: rl.Vector2{X: 598, Y: 616},
+			Pos: rl.Vector2{X: 598, Y: 528},
 			Tam: rl.Vector2{X: 268, Y: 75},
 			Rotulo: utils.Texto{
 				Conteudo: "Voltar",
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
-			Travado: false,
+			Travado: true,
 			Clique: func() {
+				globais.BotaoContinuar.Travado = false
+
 				if pivo < -1 {
 					pivo = -1
 				}
@@ -134,12 +128,33 @@ func AtualizarPrincipal(globais *state.Globais) {
 				} else if pivoMemo >= 0 {
 					pivoMemo--
 				}
+
+				if pivoMemo < 0 && pivo < 0 {
+					globais.BotaoVoltar.Travado = true
+					globais.BotaoReiniciar.Travado = true
+				}
+			},
+		}
+
+		globais.BotaoReiniciar = ui.Botao{
+			Pos: rl.Vector2{X: 598, Y: 616},
+			Tam: rl.Vector2{X: 268, Y: 75},
+			Rotulo: utils.Texto{
+				Conteudo: "Reiniciar",
+				Tam:      32,
+				Fonte:    globais.FonteSans,
+			},
+			Travado: true,
+			Clique: func() {
+				for !globais.BotaoVoltar.Travado {
+					globais.BotaoVoltar.Clique()
+				}
 			},
 		}
 	})
 
 	globais.BotaoContinuar.Atualizar()
-	globais.BotaoPasso.Atualizar()
+	globais.BotaoReiniciar.Atualizar()
 	globais.BotaoVoltar.Atualizar()
 }
 
@@ -221,7 +236,14 @@ func ExibidorMemoria(globais *state.Globais, i int) {
 			yQuadro += deslocamentoY
 		}
 
-		rl.DrawText(proc.Nome, int32(xQuadro), int32(yQuadro), 20, rl.White)
+		rl.DrawTextEx(
+			*globais.FonteSans,
+			proc.Nome,
+			rl.Vector2{X: xQuadro, Y: yQuadro},
+			20,
+			1,
+			rl.White,
+		)
 	}
 }
 
@@ -234,16 +256,22 @@ func ExibidorSimulacao(globais *state.Globais, i int) {
 	alturaLinhaOperacao := float32(25)
 	yOperacao := proc.CoordBin.Y + 15 + (float32(i) * alturaLinhaOperacao)
 	xOperacao := proc.CoordBin.X + 15
-	rl.DrawText(strconv.Itoa(proc.IntervaloBin), int32(xOperacao), int32(yOperacao), 20, rl.White)
+	rl.DrawTextEx(
+		*globais.FonteSans,
+		strconv.Itoa(proc.IntervaloBin),
+		rl.Vector2{X: xOperacao, Y: yOperacao},
+		20,
+		10,
+		rl.White,
+	)
 
 	if proc.Pagina >= 0 && proc.Pagina < globais.TamPaginas {
-
 		slotAlturaQuadros := proc.CoordText.Height / float32(globais.TamPaginas)
 		yQuadro := proc.CoordText.Y + (float32(proc.Pagina) * slotAlturaQuadros) + (slotAlturaQuadros / 2) - 50
 		xQuadro := proc.CoordText.X + (proc.CoordText.Width / 2) - 80
 		colisao := 0
 
-		for j := 0; j < i; j++ {
+		for j := range i {
 			if globais.Processos[j].Pagina == proc.Pagina {
 				if globais.Processos[j].CoordText == proc.CoordText {
 					colisao++
@@ -258,7 +286,7 @@ func ExibidorSimulacao(globais *state.Globais, i int) {
 			yQuadro += deslocamentoY
 		}
 
-		rl.DrawText(proc.Texto, int32(xQuadro), int32(yQuadro), 16, rl.White)
+		rl.DrawTextEx(*globais.FonteSans, proc.Texto, rl.Vector2{X: xQuadro, Y: yQuadro}, 16, 1, rl.White)
 	}
 }
 
@@ -403,7 +431,7 @@ func DesenharPrincipal(globais *state.Globais) {
 	// Botões
 	// ------------------------------
 	globais.BotaoContinuar.Desenhar()
-	globais.BotaoPasso.Desenhar()
+	globais.BotaoReiniciar.Desenhar()
 	globais.BotaoVoltar.Desenhar()
 
 	slotPaginas := recPaginasIn.Height / float32(globais.TamPaginas)
@@ -423,12 +451,19 @@ func DesenharPrincipal(globais *state.Globais) {
 		rl.DrawLineEx(posIni, posEnd, 3, ui.CorPrincipal)
 	}
 
-	centroTabelaPaginas := ((recProcessosIn.X + recProcessosIn.Width) / 2) + 20
+	centroTabelaPaginas := (recProcessosIn.X + recProcessosIn.Width) / 2
 	slotTabelaFixa := recProcessosIn.Height / 10
 	for i := range 10 {
 		posY := recProcessosIn.Y + float32(i)*slotTabelaFixa
 
-		rl.DrawText(textosPaginas[i].valor, int32(centroTabelaPaginas), int32(posY+20), 20, rl.White)
+		rl.DrawTextEx(
+			*globais.FonteSans,
+			textosPaginas[i].valor,
+			rl.Vector2{X: centroTabelaPaginas + 5, Y: posY + 15},
+			24,
+			1,
+			rl.White,
+		)
 
 		if i < 9 {
 			linhaY := posY + slotTabelaFixa
@@ -451,12 +486,12 @@ func DesenharPrincipal(globais *state.Globais) {
 	// ------------------------------
 
 	diviNumBytesMemo := globais.TamFisica / globais.TamLogica
-	posicaoTexto := rl.Vector2{X: recMemoria.X, Y: recMemoriaIn.Y + 30}
+	posicaoTexto := rl.Vector2{X: recMemoria.X + 18, Y: recMemoriaIn.Y + 50}
 	yInicial := recMemoriaIn.Y
 
-	for i := 0; i < globais.TamLogica+1; i++ {
-		posicaoTexto.Y = yInicial + float32(i)*slotPaginasMemo - 20
-		rl.DrawTextEx(*globais.FonteSans, strconv.Itoa(i*diviNumBytesMemo), posicaoTexto, 20, 1, rl.White)
+	for i := range globais.TamLogica {
+		posicaoTexto.Y = yInicial + float32(i)*slotPaginasMemo
+		rl.DrawTextEx(*globais.FonteSans, fmt.Sprintf("%02d", i*diviNumBytesMemo), posicaoTexto, 20, 1, rl.White)
 	}
 
 	//Texto tabela
@@ -464,32 +499,18 @@ func DesenharPrincipal(globais *state.Globais) {
 	posicaoTextoQuadros := rl.Vector2{X: recPaginasIn.X, Y: recPaginasIn.Y + 30}
 	yInicialQuadros := recPaginasIn.Y
 
-	for i := 0; i < globais.TamPaginas+1; i++ {
+	for i := range globais.TamPaginas {
 		posicaoTextoQuadros.Y = yInicialQuadros + float32(i)*slotPaginas
 		rl.DrawTextEx(*globais.FonteSans, strconv.Itoa(i*diviNumBytesPage), posicaoTextoQuadros, 20, 1, rl.White)
 	}
 
 	//Texto tabela fixa
 	diviNumBytesFixo := globais.NumBits / 10
-	posicaoTextoFixo := rl.Vector2{X: recProcessosIn.X, Y: recProcessosIn.Y + 30}
+	posicaoTextoFixo := rl.Vector2{X: recProcessosIn.X + 8, Y: recProcessosIn.Y + 30}
 	yInicialFixo := recProcessosIn.Y
 
-	for i := range 11 {
-		posicaoTextoFixo.Y = yInicialFixo + float32(i)*slotTabelaFixa
-		rl.DrawTextEx(*globais.FonteSans, strconv.Itoa(i*diviNumBytesFixo), posicaoTextoFixo, 20, 1, rl.White)
+	for i := range 10 {
+		posicaoTextoFixo.Y = yInicialFixo + float32(i)*slotTabelaFixa + 17
+		rl.DrawTextEx(*globais.FonteSans, fmt.Sprintf("%.2d", i*diviNumBytesFixo), posicaoTextoFixo, 20, 1, rl.White)
 	}
-
-	if pivo >= 0 {
-		rl.DrawRectangleLinesEx(
-			rl.Rectangle{
-				X:      recBusca.X,
-				Y:      recBusca.Y,
-				Width:  recBusca.Width,
-				Height: recBusca.Height,
-			},
-			2,
-			rl.Red,
-		)
-	}
-
 }

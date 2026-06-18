@@ -46,7 +46,7 @@ type Globais struct {
 	BoxTamLogica  ui.Digibox
 
 	BotaoContinuar ui.Botao
-	BotaoPasso     ui.Botao
+	BotaoReiniciar ui.Botao
 	BotaoVoltar    ui.Botao
 
 	Processos []BlocoProcesso
