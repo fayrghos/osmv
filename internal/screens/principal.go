@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/fayrghos/osmv/internal/state"
+	"github.com/fayrghos/osmv/internal/tools"
 	"github.com/fayrghos/osmv/internal/ui"
 	"github.com/fayrghos/osmv/internal/utils"
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -17,10 +18,12 @@ type vetorTexto struct {
 }
 
 var (
+	Memoria    tools.Tabela_Hash
 	pivo       = -1
 	pivoMemo   = -1
 	once       sync.Once
 	once2      sync.Once
+	once3      sync.Once
 	numPaginas []int
 	recBaseBin rl.Rectangle = rl.Rectangle{
 		X:      609,
@@ -34,11 +37,16 @@ var (
 		Width:  0,
 		Height: 271,
 	}
-	flip          = 1
+	recMemo rl.Rectangle = rl.Rectangle{
+		X:      907,
+		Y:      146,
+		Width:  371,
+		Height: 533,
+	}
 	textosPaginas = []vetorTexto{{"7A4B92C1"}, {"3F8E2D56"}, {"9C104B7E"}, {"D52A8F43"}, {"6B491E2C"}, {"8E3C9A57"}, {"2F5B8D10"}, {"C9A4E6B2"}, {"41D2B8E9"}, {"E07F3C4A"}}
 )
 
-// Lógica da tela principal
+// logica tela principal
 func AtualizarPrincipal(globais *state.Globais) {
 	recrecQuadrosIn := rl.Rectangle{
 		X:      348,
@@ -72,14 +80,24 @@ func AtualizarPrincipal(globais *state.Globais) {
 				})
 				if pivo < -1 {
 					pivo = -1
-				} else if pivo > globais.TamPaginas*2 {
-					return
 				}
-				if pivo < 10 {
+				if pivoMemo < -1 {
+					pivoMemo = -1
+				}
+
+				if pivo < len(globais.Processos)-1 {
 					pivo++
 					globais.Processos[pivo].Pagina = VerificadorSimulacao(globais, pivo)
 					globais.Processos[pivo].CoordBin = recrecTabelaIn
 					globais.Processos[pivo].CoordText = recrecQuadrosIn
+				} else {
+					once3.Do(func() {
+						Memoria.Preencher(globais)
+					})
+					if pivoMemo < globais.TamLogica-1 {
+						pivoMemo++
+						Memoria.TabelaMemo[pivoMemo].Coordenada = recMemo
+					}
 				}
 			},
 		}
@@ -111,8 +129,10 @@ func AtualizarPrincipal(globais *state.Globais) {
 				if pivo < -1 {
 					pivo = -1
 				}
-				if pivo >= 0 {
+				if pivo >= 0 && pivoMemo <= -1 {
 					pivo--
+				} else if pivoMemo >= 0 {
+					pivoMemo--
 				}
 			},
 		}
@@ -172,6 +192,39 @@ func soma(globais *state.Globais) {
 	recBusca.Height = recBaseBin.Height - 20
 }
 
+func ExibidorMemoria(globais *state.Globais, i int) {
+	if i < 0 || i >= globais.TamLogica {
+		return
+	}
+
+	proc := Memoria.TabelaMemo[i]
+
+	if proc.Valor >= 0 && proc.Valor < globais.TamPaginas {
+
+		slotAlturaQuadros := proc.Coordenada.Height / float32(globais.TamPaginas)
+		yQuadro := proc.Coordenada.Y + (float32(proc.Valor) * slotAlturaQuadros) + (slotAlturaQuadros / 2) - 50
+		xQuadro := proc.Coordenada.X + (proc.Coordenada.Width / 2) - 80
+		colisao := 0
+
+		for j := 0; j < i; j++ {
+			if Memoria.TabelaMemo[j].Valor == proc.Valor {
+				if Memoria.TabelaMemo[j].Coordenada == proc.Coordenada {
+					colisao++
+				}
+			}
+		}
+
+		if colisao > 0 {
+			deslocamentoX := float32(colisao%2) * 90
+			deslocamentoY := float32(colisao/2) * 30
+			xQuadro += deslocamentoX
+			yQuadro += deslocamentoY
+		}
+
+		rl.DrawText(proc.Nome, int32(xQuadro), int32(yQuadro), 20, rl.White)
+	}
+}
+
 func ExibidorSimulacao(globais *state.Globais, i int) {
 	if i < 0 || i >= len(globais.Processos) {
 		return
@@ -190,11 +243,7 @@ func ExibidorSimulacao(globais *state.Globais, i int) {
 		xQuadro := proc.CoordText.X + (proc.CoordText.Width / 2) - 80
 		colisao := 0
 
-		if yQuadro > recBaseBin.Height {
-			flip = 2
-		}
-
-		for j := range i {
+		for j := 0; j < i; j++ {
 			if globais.Processos[j].Pagina == proc.Pagina {
 				if globais.Processos[j].CoordText == proc.CoordText {
 					colisao++
@@ -213,7 +262,6 @@ func ExibidorSimulacao(globais *state.Globais, i int) {
 	}
 }
 
-// Redesenho da tela principal
 func DesenharPrincipal(globais *state.Globais) {
 	// ------------------------------
 	// Processos
@@ -358,9 +406,6 @@ func DesenharPrincipal(globais *state.Globais) {
 	globais.BotaoPasso.Desenhar()
 	globais.BotaoVoltar.Desenhar()
 
-	// ------------------------------
-	// Etc.
-	// ------------------------------
 	slotPaginas := recPaginasIn.Height / float32(globais.TamPaginas)
 	slotPaginasMemo := recMemoriaIn.Height / float32(globais.TamLogica)
 
@@ -396,6 +441,9 @@ func DesenharPrincipal(globais *state.Globais) {
 	//Chamada da função para exibir a simulação
 	for i := 0; i <= pivo; i++ {
 		ExibidorSimulacao(globais, i)
+	}
+	for j := 0; j <= pivoMemo; j++ {
+		ExibidorMemoria(globais, j)
 	}
 
 	// ------------------------------
