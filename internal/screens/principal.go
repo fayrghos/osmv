@@ -215,10 +215,12 @@ func ExibidorMemoria(globais *state.Globais, i int) {
 	proc := Memoria.TabelaMemo[i]
 
 	if proc.Valor >= 0 && proc.Valor < globais.TamPaginas {
-
+		tamTexto := rl.MeasureTextEx(*globais.FonteSans, proc.Nome, 20, 1)
 		slotAlturaQuadros := proc.Coordenada.Height / float32(globais.TamPaginas)
-		yQuadro := proc.Coordenada.Y + (float32(proc.Valor) * slotAlturaQuadros) + (slotAlturaQuadros / 2) - 50
-		xQuadro := proc.Coordenada.X + (proc.Coordenada.Width / 2) - 80
+		yQuadro := proc.Coordenada.Y + (float32(proc.Valor) * slotAlturaQuadros) + (slotAlturaQuadros / 2)
+		xQuadro := (proc.Coordenada.X + (proc.Coordenada.Width / 2))
+		centroX := xQuadro - (float32(tamTexto.X) / 2)
+		centroY := yQuadro - (float32(tamTexto.Y) / 2)
 		colisao := 0
 
 		for j := 0; j < i; j++ {
@@ -239,7 +241,7 @@ func ExibidorMemoria(globais *state.Globais, i int) {
 		rl.DrawTextEx(
 			*globais.FonteSans,
 			proc.Nome,
-			rl.Vector2{X: xQuadro, Y: yQuadro},
+			rl.Vector2{X: centroX, Y: centroY},
 			20,
 			1,
 			rl.White,
