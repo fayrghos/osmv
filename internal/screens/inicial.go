@@ -27,7 +27,7 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte: globais.FonteSans,
 			},
 			Titulo: utils.Texto{
-				Conteudo: "Tam. Páginas",
+				Conteudo: "Num. de Páginas",
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
@@ -41,7 +41,7 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte: globais.FonteSans,
 			},
 			Titulo: utils.Texto{
-				Conteudo: "Num. Bits",
+				Conteudo: "Num. Bits Processo",
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
@@ -55,7 +55,7 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte: globais.FonteSans,
 			},
 			Titulo: utils.Texto{
-				Conteudo: "Tam. Memória Física",
+				Conteudo: "Num. Bits Memória Física",
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
@@ -69,7 +69,7 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte: globais.FonteSans,
 			},
 			Titulo: utils.Texto{
-				Conteudo: "Tam. Memória Lógica",
+				Conteudo: "Num. de slots Memória Física",
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
