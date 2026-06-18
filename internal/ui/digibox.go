@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/fayrghos/osmv/internal/utils"
@@ -13,6 +14,9 @@ type Digibox struct {
 	Tam    rl.Vector2
 	Campo  utils.Texto
 	Titulo utils.Texto
+
+	ValorMax int
+	ValorMin int
 
 	selecionada bool
 	destacada   bool
@@ -66,20 +70,29 @@ func (box Digibox) Desenhar() {
 func (box *Digibox) ReceberNums() {
 	digitado := rl.GetCharPressed()
 
-	if digitado >= '0' && digitado <= '9' && len(box.Campo.Conteudo) < 5 {
+	if digitado >= '0' && digitado <= '9' && len(box.Campo.Conteudo) < 3 {
 		box.Campo.Conteudo += string(digitado)
 	} else if utils.IsKeyPressedDouble(rl.KeyBackspace) && len(box.Campo.Conteudo) > 0 {
 		box.Campo.Conteudo = box.Campo.Conteudo[:len(box.Campo.Conteudo)-1]
 	}
 }
 
-// Retorna o número contido no campo, ou 0 se der algum erro
-func (box Digibox) Exportar() int {
+// Retorna o número contido no campo se possível
+func (box Digibox) Exportar() (int, error) {
 	val, err := strconv.Atoi(box.Campo.Conteudo)
 	if err != nil {
-		return 0
+		return 0, errors.New("Conversão inválida")
 	}
-	return val
+
+	if val > box.ValorMax {
+		return 0, errors.New("Entrada maior que o máximo permitido")
+	}
+
+	if val < box.ValorMin {
+		return 0, errors.New("Entrada menor que o mínimo permitido")
+	}
+
+	return val, nil
 }
 
 // Atualiza a lógica da caixa
