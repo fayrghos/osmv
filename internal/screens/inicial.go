@@ -1,6 +1,8 @@
 package screens
 
 import (
+	"fmt"
+
 	"github.com/fayrghos/osmv/internal/state"
 	"github.com/fayrghos/osmv/internal/ui"
 	"github.com/fayrghos/osmv/internal/utils"
@@ -31,6 +33,8 @@ func AtualizarInicial(globais *state.Globais) {
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
+			ValorMax: 16,
+			ValorMin: 2,
 		}
 
 		globais.BoxNumBits = ui.Digibox{
@@ -45,6 +49,8 @@ func AtualizarInicial(globais *state.Globais) {
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
+			ValorMax: 64,
+			ValorMin: 16,
 		}
 
 		globais.BoxTamFisica = ui.Digibox{
@@ -59,6 +65,8 @@ func AtualizarInicial(globais *state.Globais) {
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
+			ValorMax: 128,
+			ValorMin: 8,
 		}
 
 		globais.BoxTamLogica = ui.Digibox{
@@ -69,10 +77,12 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte: globais.FonteSans,
 			},
 			Titulo: utils.Texto{
-				Conteudo: "Num. de slots Memória Física",
+				Conteudo: "Num. Slots Memória Física",
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
+			ValorMax: 16,
+			ValorMin: 2,
 		}
 
 		if globais.ModoRapido {
@@ -92,20 +102,50 @@ func AtualizarInicial(globais *state.Globais) {
 			},
 			Travado: false,
 			Clique: func() {
-				globais.TamPaginas = globais.BoxTamPaginas.Exportar()
-				globais.NumBits = globais.BoxNumBits.Exportar()
-				globais.TamFisica = globais.BoxTamFisica.Exportar()
-				globais.TamLogica = globais.BoxTamLogica.Exportar()
+				var err error
 
-				if globais.TamPaginas == 0 ||
-					globais.NumBits == 0 ||
-					globais.TamFisica == 0 ||
-					globais.TamLogica == 0 {
-					globais.BoxErro.Definir("Todos os campos devem ser maiores que 0.")
-				} else {
-					globais.BoxErro.Definir("")
-					globais.TelaAtual = state.TelaPrincipal
+				globais.TamPaginas, err = globais.BoxTamPaginas.Exportar()
+				if err != nil {
+					globais.BoxErro.Definir(fmt.Sprintf(
+						"O número de páginas deve estar entre %d e %d.",
+						globais.BoxTamPaginas.ValorMin,
+						globais.BoxTamPaginas.ValorMax,
+					))
+					return
 				}
+
+				globais.NumBits, err = globais.BoxNumBits.Exportar()
+				if err != nil {
+					globais.BoxErro.Definir(fmt.Sprintf(
+						"Os bits dos processos devem estar entre %d e %d.",
+						globais.BoxNumBits.ValorMin,
+						globais.BoxNumBits.ValorMax,
+					))
+					return
+				}
+
+				globais.TamFisica, err = globais.BoxTamFisica.Exportar()
+				if err != nil {
+					globais.BoxErro.Definir(fmt.Sprintf(
+						"Os bits da memória física devem estar entre %d e %d.",
+						globais.BoxTamFisica.ValorMin,
+						globais.BoxTamFisica.ValorMax,
+					))
+					return
+				}
+
+				globais.TamLogica, err = globais.BoxTamLogica.Exportar()
+				if err != nil {
+					globais.BoxErro.Definir(fmt.Sprintf(
+						"Os slots da memória física devem estar entre %d e %d.",
+						globais.BoxTamLogica.ValorMin,
+						globais.BoxTamLogica.ValorMax,
+					))
+					return
+				}
+
+				globais.BoxErro.Definir("")
+				globais.TelaAtual = state.TelaPrincipal
 			},
 		}
 	})
