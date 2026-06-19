@@ -527,7 +527,7 @@ func DesenharPrincipal(globais *state.Globais) {
 
 	for i := range globais.TamLogica {
 		posY := yInicial + float32(i)*slotPaginasMemo + (slotPaginasMemo / 2) - 10
-		rl.DrawTextEx(*globais.FonteSans, fmt.Sprintf("%02d", i*diviNumBytesMemo), rl.Vector2{X: recMemoria.X + 12, Y: posY}, 20, 1, rl.White)
+		rl.DrawTextEx(*globais.FonteSans, fmt.Sprintf("%02d", i*diviNumBytesMemo), rl.Vector2{X: recMemoria.X + 17, Y: posY}, 20, 1, rl.White)
 	}
 
 	//Texto tabela

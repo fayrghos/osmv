@@ -2,6 +2,9 @@
 
 Um pequeno visualizador de memória escrito em Go, em conjunto da biblioteca Raylib para a disciplina de Sistemas Operacionais.
 
+![ImPrincial](./assets/repo/imprincipal.png)
+![ImInicial](./assets/repo/iminicial.png)
+
 ## Navegação
 
 O programa foi projeto para operar utilizando o mouse como principal ferramenta. O teclado é reservado apenas a digitação nas caixas de texto.

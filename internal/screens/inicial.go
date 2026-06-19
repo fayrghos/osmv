@@ -29,7 +29,7 @@ func AtualizarInicial(globais *state.Globais) {
 				Fonte: globais.FonteSans,
 			},
 			Titulo: utils.Texto{
-				Conteudo: "Num. de Páginas",
+				Conteudo: "Num. Páginas",
 				Tam:      32,
 				Fonte:    globais.FonteSans,
 			},
